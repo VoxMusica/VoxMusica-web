@@ -1,0 +1,16 @@
+{
+  "name": "Metatune",
+  "version": "0.1.0",
+  "description": "A tool to translate your music metadata",
+  "main": "index.ts",
+  "repository": "https://github.com/VoxMusica/VoxMusica-cli",
+  "author": "Kamule",
+  "license": "GPL-3.0",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}
