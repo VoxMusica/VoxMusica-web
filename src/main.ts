@@ -1,1 +1,3 @@
-console.log('Hello world')
+import { initConfig } from '#config/index.ts'
+
+await initConfig()
