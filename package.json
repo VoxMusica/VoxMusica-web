@@ -6,11 +6,22 @@
   "repository": "https://github.com/VoxMusica/VoxMusica-cli",
   "author": "Kamule",
   "license": "GPL-3.0",
+  
+  "engines": {
+    "node": ">= 20 <27"
+  },
+
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "nodemon --exec node src/main.ts"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
+    "eslint": "^10.8.1",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.6",
+    "ts-node": "^10.9.2",
     "typescript": "^7.0.2"
   }
 }

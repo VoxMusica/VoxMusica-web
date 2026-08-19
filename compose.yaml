@@ -1,0 +1,6 @@
+services:
+  voxmusica-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: voxmusica-cli:latest
