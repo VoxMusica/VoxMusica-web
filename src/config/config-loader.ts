@@ -1,12 +1,12 @@
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
-import logger from '#logger.ts'
+import logger from '#logger'
 import { parse as yamlParse } from 'yaml'
 
-import type { ConfigData } from '#config/types.ts'
+import type { ConfigData } from '#config/types'
 import type { PartialDeep } from 'type-fest'
-import { SUPPORTED_LOCALES } from '#services/locales/index.ts'
+import { SUPPORTED_LOCALES } from '#services/locales/index'
 
 const CONFIG_FILE_NAME = 'vmcli'
 
@@ -72,7 +72,7 @@ const loadEnvConfig = (): PartialDeep<ConfigData> => {
 }
 
 const mergeConfig = <T>(...configs: Array<PartialDeep<T>>): PartialDeep<T> => {
-  let config: PartialDeep<T> = {} as PartialDeep<T>;
+  const config: PartialDeep<T> = {} as PartialDeep<T>;
   for(const conf of configs){
     // For each attribute, if it is a subObject then merge it, otherwise overwrite it
     for(const key in conf){

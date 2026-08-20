@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
-import logger from '#logger.ts'
-import { Config } from "#config/config.ts"
+import logger from '#logger'
+import { Config } from "#config/config"
 
 
 export const initConfig = async () => {

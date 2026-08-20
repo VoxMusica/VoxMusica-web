@@ -1,9 +1,9 @@
 {
-  "name": "Metatune",
+  "name": "VoxMusica-core",
   "version": "0.1.0",
   "description": "A tool to translate your music metadata",
   "main": "index.ts",
-  "repository": "https://github.com/VoxMusica/VoxMusica-cli",
+  "repository": "https://github.com/VoxMusica/VoxMusica-core",
   "author": "Kamule",
   "license": "GPL-3.0",
   "type": "module",
@@ -11,12 +11,16 @@
     "node": ">= 20 <27"
   },
   "imports": {
-    "#*": "./src/*"
+    "#*": {
+      "types": "./src/*.ts",
+      "development": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
-    "dev": "nodemon --exec node src/main.ts",
+    "dev": "nodemon --exec \"node --conditions=development src/main.ts\"",
     "lint": "eslint ."
   },
   "dependencies": {

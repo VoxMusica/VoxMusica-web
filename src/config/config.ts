@@ -1,7 +1,7 @@
-import logger from '#logger.ts'
+import logger from '#logger'
 import { exit } from 'node:process'
-import { loadConfig } from '#config/config-loader.ts'
-import type { ConfigData, Directories, Locales } from '#config/types.ts'
+import { loadConfig } from '#config/config-loader'
+import type { ConfigData, Directories, Locales } from '#config/types'
 
 export class Config implements ConfigData   {
   static readonly #instance: Config = new Config()

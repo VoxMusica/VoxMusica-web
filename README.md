@@ -1,4 +1,4 @@
-# VoxMusica-cli
+# VoxMusica-core
 
 Cli tool that can translate audiofile metadata
 

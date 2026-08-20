@@ -1,2 +1,2 @@
-export * from '#config/init.ts'
-export * from '#config/config.ts'
+export * from '#config/init'
+export * from '#config/config'

@@ -1,3 +1,3 @@
-import { initConfig } from '#config/index.ts'
+import { initConfig } from '#config/index'
 
 await initConfig()
