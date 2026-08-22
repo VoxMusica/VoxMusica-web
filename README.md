@@ -1,8 +1,8 @@
-# VoxMusica-core
+# VoxMusica-server
 
-Cli tool that can translate audiofile metadata
+The backend for voxmusica
 
-## Configuration
+## Installation
 
 ### Configuration file
 

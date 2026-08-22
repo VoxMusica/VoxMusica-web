@@ -1,9 +1,9 @@
 {
-  "name": "VoxMusica-core",
+  "name": "VoxMusica-server",
   "version": "0.1.0",
-  "description": "A tool to translate your music metadata",
+  "description": "A music streaming server",
   "main": "index.ts",
-  "repository": "https://github.com/VoxMusica/VoxMusica-core",
+  "repository": "https://github.com/VoxMusica/VoxMusica-server",
   "author": "Kamule",
   "license": "GPL-3.0",
   "type": "module",
@@ -24,14 +24,28 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@fastify/jwt": "^10.2.2",
+    "@libsql/client": "^0.17.4",
+    "bcrypt": "^6.0.0",
+    "convict": "^6.2.5",
+    "convict-format-with-validator": "^6.2.0",
     "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.12.1",
+    "lodash-es": "^4.18.1",
+    "node-taglib-sharp": "^6.0.3",
     "type-fest": "^5.8.0",
     "winston": "^3.19.0",
+    "winston-transport": "^4.9.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/bcrypt": "^6.0.0",
+    "@types/convict": "^6.1.6",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^26.2.0",
+    "drizzle-kit": "^1.0.0-rc.4",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
     "nodemon": "^3.1.14",
@@ -39,5 +53,11 @@
     "ts-node": "^10.9.2",
     "typescript": "6.0.3",
     "typescript-eslint": "^8.67.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "local/*"
+    ]
   }
 }
