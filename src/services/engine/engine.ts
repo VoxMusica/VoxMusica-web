@@ -2,12 +2,9 @@ import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import { watch } from 'node:fs/promises'
 import type { FileChangeInfo } from 'node:fs/promises'
-
 import { debounce, type DebouncedFunc } from 'lodash-es'
 
-import { Config } from '#config/config'
-import logger from '#logger'
-import { getFileMeta } from '#services/file/filemanager'
+import config from '#config'
 
 
 type WatchEvent = {
@@ -17,12 +14,6 @@ type WatchEvent = {
 };
 
 export class Engine{
-  readonly #config
-
-  constructor(){
-    this.#config = Config.instance;
-  }
-
   async start() {
     for await (const path of this.mergeWatchers()) {
       this.processFile(path);
@@ -30,7 +21,7 @@ export class Engine{
   }
 
   #createIterators() {
-    return this.#config.directories.music.map((path) => ({
+    return config.get('library.music').map((path: string) => ({
       path,
       it: watch(path, { recursive: true })[Symbol.asyncIterator](),
     }));
@@ -129,8 +120,6 @@ export class Engine{
   }
 
   private async processFile(path: string){
-    logger.debug(`Change on file ${path}`)
-    const metadata = await getFileMeta(path)
-    //console.log(metadata)
+    console.log(path)
   }
 }

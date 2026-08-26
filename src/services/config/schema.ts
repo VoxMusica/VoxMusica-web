@@ -1,9 +1,46 @@
 import convict from 'convict'
 import { SUPPORTED_LOCALES } from '#services/locales/index'
-import { enumArrayFormat } from '#services/config/formatig/format'
+import { enumArrayFormat } from '#services/config/format'
 
 
-const schema = convict({
+type Config = {
+  server: {
+    port: number,
+    host: string,
+  },
+  logging: {
+    level: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
+    dir: string
+    filename: string,
+  },
+  data: {
+    dir: string,
+    filename: string,
+  },
+  auth: {
+    jwtSecret: string,
+    tokenExpiry: string | number,
+    cookieSecret: string,
+  },
+  library: {
+    music: Record<string, string>
+  },
+  locales: {
+    sources: Array<string>,
+    target: string,
+  },
+  scrobbling: {
+    listenbrainzUrl: string
+  },
+  cache: {
+    redis: {
+      host: string,
+      port: number,
+    },
+  },
+}
+
+const schema = convict<Config>({
   server: {
     port: {
       doc: 'Port to listen on',
@@ -64,12 +101,19 @@ const schema = convict({
       default: '7d',
       env: 'JWT_TOKEN_EXPIRY',
     },
+    cookieSecret: {
+      doc: 'Session cookie secret',
+      format: String,
+      env: 'SESSION_COOKIE_SECRET',
+      default: '',
+      sensitive: true,
+    }
   },
   library: {
     music: {
       doc: 'Path to music libraries',
-      format: 'string-array',
-      default: ['/music'],
+      format: Object,
+      default: {},
       env: 'MUSIC_DIRS',
     },
   },
@@ -95,6 +139,22 @@ const schema = convict({
       // no `env` key = cannot be overridden by env var
     },
   },
+  cache: {
+    redis: {
+      host: {
+        doc: 'Redis host',
+        format: String,
+        default: 'localhost',
+        env: 'REDIS_HOST',
+      },
+      port: {
+        doc: 'Redis port',
+        format: 'port',
+        default: 6379,
+        env: 'REDIS_PORT',
+      },
+    },
+  }
 });
 
 export default schema;

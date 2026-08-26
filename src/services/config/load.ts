@@ -2,7 +2,6 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse } from 'yaml'
 import schema from '#services/config/schema'
-#services/config/schema
 
 function findConfigFile(): string | null {
   const CONFIG_DIR = process.env.CONFIG_DIR || '/config'
@@ -15,12 +14,12 @@ function findConfigFile(): string | null {
   return null;
 }
 
-const loadConfigFile = (filePath: string): Promise<Record<string, unknown>> => {
+const loadConfigFile = (filePath: string): Record<string, unknown> => {
   const raw = readFileSync(filePath, 'utf-8');
   if (filePath.endsWith('.json')) {
-    return JSON.parse(raw);
+    return JSON.parse(raw) as Record<string, unknown>
   }
-  return parse(raw) as Record<string, unknown>; // plain read, comments discarded (fine for load-only)
+  return parse(raw) as Record<string, unknown>
 }
 
 export const loadConfig = ()  => {

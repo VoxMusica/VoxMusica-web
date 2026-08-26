@@ -1,10 +1,9 @@
-import type { FastifyInstance } from "fastify"
-import { authRoutes } from "./auth/index.ts"
+import type { FastifyInstance, FastifyPluginAsync } from 'fastify'
 
-/**
- * Encapsulates the routes
- * @param {FastifyInstance} fastify  Encapsulated Fastify Instance
- */
-export async function routes (fastify: FastifyInstance) {
-  fastify.register(authRoutes, { prefix: '/auth' });
+import webRoutes from '#api/web/index'
+import openSubsonicRoutes from '#api/open-subsonic/index'
+
+export const apiRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
+  app.register(webRoutes, { prefix: '/api' })
+  app.register(openSubsonicRoutes, { prefix: '/rest' })
 }

@@ -1,0 +1,209 @@
+{
+  "info": {
+    "_postman_id": "6373745b-4880-49d4-b9f9-f431b85a94cc",
+    "name": "VoxMusica",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1241989"
+  },
+  "item": [
+    {
+      "name": "system",
+      "item": [
+        {
+          "name": "Get info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/system/info",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "system",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "OpenSubsonic",
+      "item": [
+        {
+          "name": "Browsing",
+          "item": [
+            {
+              "name": "getMusicFolders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/getMusicFolders",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "getMusicFolders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getMusicDirectory",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/getMusicDirectory",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "getMusicDirectory"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getIndexes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/getIndexes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "getIndexes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getMusicFolders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/getMusicFolders",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "getMusicFolders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "getIndexes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/getIndexes",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "getIndexes"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "System",
+          "item": [
+            {
+              "name": "Ping",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/ping",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "ping"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Scan",
+          "item": [
+            {
+              "name": "getScanStatus",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/getScanStatus",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "getScanStatus"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "startScan",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/rest/startScan",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "rest",
+                    "startScan"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const value = pm.environment.get('password')\r\nconst hexValue = Buffer.from(value, 'utf8').toString('hex')\r\n\r\npm.request.url.addQueryParams({\r\n  key: 'u',\r\n  value: pm.environment.get('username')\r\n})\r\n\r\npm.request.url.addQueryParams({\r\n  key: 'p',\r\n  value: 'enc:'+hexValue\r\n})\r\n"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

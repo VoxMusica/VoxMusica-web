@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1787763137172,
+      "tag": "0000_ambitious_marvel_zombies",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787763412807,
+      "tag": "0001_fantastic_micromax",
+      "breakpoints": true
+    }
+  ]
+}

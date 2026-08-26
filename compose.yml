@@ -1,0 +1,6 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: voxmusica-redis-local
+    ports:
+      - '6379:6379' # exposed to host too, handy for inspecting with redis-cli locally
