@@ -12,10 +12,13 @@ export const getUserCount = async () => {
   return result?.at(0)?.count ?? 0
 }
 
-export const findUserByUsername = async (username: string) => {
-  const result = await db.select().from(users).where(eq(users.username, username))
-  return result[0] ?? null
-}
+export const findUserByUsername = async (username: string) => db
+.select().from(users).where(eq(users.username, username))
+.then(result => result?.at(0) ?? null)
+
+export const findUserById = async (id: string) =>  db
+.select().from(users).where(eq(users.id, id))
+.then(result => result?.at(0) ?? null)
 
 export const verifyPassword = async (plain: string, hash: string) => {
   return bcrypt.compare(plain, hash);

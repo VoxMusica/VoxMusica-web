@@ -30,7 +30,7 @@ export const apiKeysRoutes: FastifyPluginAsync = async (app: FastifyInstance) =>
 
     const response = await createApiKey({
       userId,
-      isSystem: true,
+      isSystem: false,
       ...(label ? { label } : {}),
       ...(expiresAt ? { expiresAt } : {}),
     })

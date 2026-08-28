@@ -22,7 +22,6 @@ const logFilename =  config.get('logging.filename')
 // const engine = new Engine();
 
 // await engine.start()
-
 const app = Fastify({
   loggerInstance: logger(logDir
     ? {

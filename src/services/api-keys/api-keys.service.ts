@@ -10,14 +10,17 @@ export const getActiveKeysForUser = (userId: string) => db
     id: apiKeys.id,
     label: apiKeys.label,
     lastUsedAt: apiKeys.lastUsedAt,
-    createdAt: apiKeys.createdAt
+    createdAt: apiKeys.createdAt,
+    expiresAt: apiKeys.expiresAt
   })
   .from(apiKeys)
   .where(and(eq(apiKeys.userId, userId), eq(apiKeys.isSystem, false)))
 
+const getKeyHash = (raw: string) => createHash('sha256').update(raw).digest('hex')
+
 const generateApiKey = () => {
   const raw = randomBytes(72).toString('base64url')
-  const hash = createHash('sha256').update(raw).digest('hex')
+  const hash = getKeyHash(raw)
   return { raw, hash }
 }
 
@@ -58,3 +61,20 @@ export const removeApiKey = async ({id, userId, isSystem} : DeleteApiKey) => db
       .delete(apiKeys)
       .where(and(eq(apiKeys.id, id), eq(apiKeys.userId, userId), eq(apiKeys.isSystem, isSystem)))
       .returning({ id: apiKeys.id })
+
+export const findApiKeyByValue = (keyValue: string) => db.select({
+    id: apiKeys.id,
+    label: apiKeys.label,
+    lastUsedAt: apiKeys.lastUsedAt,
+    createdAt: apiKeys.createdAt,
+    expiresAt: apiKeys.expiresAt,
+    userId: apiKeys.userId
+  })
+  .from(apiKeys)
+  .where(eq(apiKeys.keyHash, getKeyHash(keyValue)))
+  .then(v => v?.at(0) ?? null)
+
+  export const touchApiKeyLastUsed = (id: string) => db
+    .update(apiKeys)
+    .set({lastUsedAt: new Date()})
+    .where(eq(apiKeys.id, id))
