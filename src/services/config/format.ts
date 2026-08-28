@@ -6,7 +6,7 @@ export class EnumArrayError extends Error{}
 
 const registeredEnumArrayFormats = new Set<string>();
 
-export function enumArrayFormat(name: string, allowedValues: readonly string[]): string {
+export const enumArrayFormat = (name: string, allowedValues: readonly string[]): string => {
   // avoid re-registering the same name twice (schema.ts may be re-imported, e.g. in tests)
   if (registeredEnumArrayFormats.has(name)) {
     return name;

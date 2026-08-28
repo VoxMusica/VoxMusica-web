@@ -1,5 +1,7 @@
 import path from 'node:path'
+
 import { defineConfig } from 'drizzle-kit'
+
 import { loadConfig } from "./src/services/config/load.ts"
 
 const config = loadConfig()

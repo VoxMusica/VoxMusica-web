@@ -3,14 +3,13 @@ import { User } from '#services/users/users.service'
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {
-    payload: { sub: string; username: string; roles: string[] }
-    user: { sub: string; username: string; roles: string[] }
+    user: { sub: string; username: string; roles: string[], apiKeyId: string }
   }
 }
 
 declare module 'fastify' {
   interface FastifyRequest {
-    subsonicUser?: User
+    subsonicUser?: User,
   }
   interface FastifyInstance {
     authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>

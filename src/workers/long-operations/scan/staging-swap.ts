@@ -1,5 +1,6 @@
-import { db } from '#db/index'
 import { sql } from 'drizzle-orm'
+
+import { db } from '#db/index'
 
 const TABLES = ['tracks', 'albums', 'artists', ] as const
 export const swapStagingIntoMain = async () => {

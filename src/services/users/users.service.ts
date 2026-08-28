@@ -1,6 +1,7 @@
+import { randomUUID } from 'node:crypto'
+
 import bcrypt from 'bcrypt'
 import { count, eq } from 'drizzle-orm'
-import { randomUUID } from 'node:crypto'
 
 import { db } from '#db/index'
 import { users } from '#db/schema'
@@ -20,9 +21,7 @@ export const verifyPassword = async (plain: string, hash: string) => {
   return bcrypt.compare(plain, hash);
 }
 
-export function hasRole(rolesRaw: string, role: Role): boolean {
-  return parseRoles(rolesRaw).includes(role)
-}
+export const hasRole = (rolesRaw: string, role: Role): boolean => parseRoles(rolesRaw).includes(role)
 
 type CreateUserInput = { username: string, password: string, roles: Role[] }
 export const createUser = async ({ username, password, roles } : CreateUserInput) => {

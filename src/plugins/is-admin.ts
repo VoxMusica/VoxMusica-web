@@ -1,6 +1,8 @@
 import fp from 'fastify-plugin'
-import type { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
+
 import { info } from '#services/system/info.service'
+
+import type { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 
 const isAdminPlugin: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.decorate('isAdmin', async (request: FastifyRequest, reply: FastifyReply) => {

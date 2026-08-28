@@ -5,6 +5,14 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
+    "entry": {
+      "main": "src/main.ts",
+      "worker": "src/worker.ts"
+    },
+
+    "splitting": false,
+    "treeshake": true,
+
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",

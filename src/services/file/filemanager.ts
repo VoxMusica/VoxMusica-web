@@ -1,5 +1,6 @@
-import { VMSet } from '#types/vm-set'
 import { File, Tag } from 'node-taglib-sharp'
+
+import { VMSet } from '#types/vm-set'
 
 export const SUPPORTED_EXTENSIONS = new VMSet([
   '.aac',

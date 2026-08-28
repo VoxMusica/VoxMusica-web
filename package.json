@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "A music streaming server",
   "main": "index.ts",
-  "repository": "https://github.com/VoxMusica/VoxMusica-server",
+  "repository": {
+    "url": "https://github.com/VoxMusica/VoxMusica-server"
+  },
   "author": "Kamule",
   "license": "GPL-3.0",
   "type": "module",
@@ -18,6 +20,8 @@
     }
   },
   "scripts": {
+    "prebuild": "tsx scripts/generate-user-agent.ts",
+    "trigger": "cross-env NODE_OPTIONS=--conditions=development tsx scripts/trigger-job.ts",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
     "start:worker": "node dist/worker.js",
@@ -48,11 +52,13 @@
     "lodash-es": "^4.18.1",
     "ms": "^2.1.3",
     "music-metadata": "^11.15.0",
+    "musicbrainz-api": "^1.2.1",
     "node-taglib-sharp": "^6.0.3",
     "p-limit": "^7.3.1",
     "type-fest": "^5.8.0",
-    "winston": "^3.19.0",
+    "uuid": "^14.0.2",
     "winston-transport": "^4.9.0",
+    "xmlbuilder2": "^4.0.3",
     "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
@@ -67,6 +73,10 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "jiti": "^2.7.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.6",
     "ts-node": "^10.9.2",

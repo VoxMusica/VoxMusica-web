@@ -1,8 +1,11 @@
+import ms, { type StringValue } from 'ms'
+
 import config from '#config'
+import { createApiKey, removeApiKey } from '#services/api-keys/api-keys.service'
 import { parseRoles } from '#services/users/model/role'
 import { findUserByUsername, verifyPassword } from '#services/users/users.service'
+
 import type { FastifyInstance, FastifyPluginAsync, FastifyReply } from 'fastify'
-import ms, { type StringValue } from 'ms'
 
 export const loginRoute: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.post('/login', async (request, reply: FastifyReply) => {
@@ -22,8 +25,27 @@ export const loginRoute: FastifyPluginAsync = async (app: FastifyInstance) => {
       return reply.code(401).send({ error: 'Invalid credentials' });
     }
   
-    const userPayload = { sub: user.id, username: user.username, roles: parseRoles(user.roles) }
-    const token = app.jwt.sign(userPayload,{ expiresIn: config.get('auth.tokenExpiry') })
+    const tokenExpiry = config.get('auth.tokenExpiry') as StringValue
+    const expiresAt = new Date(Date.now() + ms(tokenExpiry))
+
+    const { apiKey, apiKeyId } = await createApiKey({
+      userId: user.id,
+      expiresAt,
+      isSystem: true
+    })
+
+    const userPayload = {
+      sub: user.id,
+      username: user.username,
+      roles: parseRoles(user.roles),
+    }
+    const token = app.jwt.sign({
+        ...userPayload,
+        apiKeyId
+      },{
+        expiresIn: config.get('auth.tokenExpiry')
+      }
+    )
 
     reply.setCookie('session', token, {
       httpOnly: true,
@@ -34,8 +56,16 @@ export const loginRoute: FastifyPluginAsync = async (app: FastifyInstance) => {
       signed: true
     })
 
-    return reply.send({ user: userPayload })
+    return reply.send({ user: userPayload, apiKey })
   });
+
+  app.post('/logout', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const { apiKeyId, sub: userId } = request.user
+
+    await removeApiKey({ id: apiKeyId, userId, isSystem: true })
+    reply.clearCookie('session', { path: '/' })
+    return reply.send({ ok: true })
+  })
 }
 
 export default loginRoute

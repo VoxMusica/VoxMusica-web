@@ -1,8 +1,9 @@
-import type { FastifyInstance, FastifyPluginAsync, FastifyReply } from "fastify"
 import { z } from 'zod'
 
-import { apiOk } from "../responses/api.response.ts"
+import { apiOk } from "#api/web/responses/api.response"
 import { createUser } from "#services/users/users.service"
+
+import type { FastifyInstance, FastifyPluginAsync, FastifyReply } from "fastify"
 
 const countMatchingCategories = (value: string) => {
   const categories = [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/]
@@ -26,7 +27,7 @@ interface CreateAdminAccountBody {
 
 
 
-export const createUserAction: FastifyPluginAsync = async (app: FastifyInstance) => {
+export const createUserRoute: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.post<{ Body: CreateAdminAccountBody}>('', {
     onRequest: [app.isAdminOrBootstrap],
     schema: { body: createAdminAccountBodySchema }
@@ -41,4 +42,4 @@ export const createUserAction: FastifyPluginAsync = async (app: FastifyInstance)
   })
 }
 
-export default createUserAction
+export default createUserRoute

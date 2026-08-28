@@ -1,9 +1,11 @@
-import os from 'node:os'
 import { readdir } from 'node:fs/promises'
+import os from 'node:os'
 import { extname, join } from 'node:path'
+
 import pLimit from 'p-limit'
-import { VMSet } from "#types/vm-set"
+
 import config from '#config'
+import { VMSet } from "#types/vm-set"
 
 export const SUPPORTED_EXTENSIONS = new VMSet([
   '.aac',
@@ -62,7 +64,7 @@ export const walkLibrary = async (
     await Promise.all(subdirs.map((d) => limit(() => walkDir(join(dir, d.name)))))
   }
   const dirs = Object.entries(config.get('library.music'))
-  for(const [_, rootDir] of dirs){
+  for(const [, rootDir] of dirs){
     await walkDir(rootDir)
   }
   onProgress({ ...counters })

@@ -1,5 +1,13 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
+
 import { users } from '#db/schemas/user'
+
+const musicbrainzTrackingColumns = () => ({
+  musicbrainzId: text('musicbrainz_id'),
+  status: text('status', { enum: ['pending', 'matched', 'not_found', 'error'] as const }).notNull().default('pending'),
+  lastAttemptAt: integer('last_attempt_at', { mode: 'timestamp' }),
+  lastFetchedAt: integer('last_fetched_at', { mode: 'timestamp' }),
+})
 
 const artistsSchema = {
   id: text('id').primaryKey(),
@@ -9,6 +17,11 @@ const artistsSchema = {
 }
 export const artists = sqliteTable('artists', artistsSchema)
 export const artistsStaging = sqliteTable('artistsStaging', artistsSchema)
+
+export const artistMusicbrainz = sqliteTable('artist_musicbrainz', {
+  artistId: text('artist_id').notNull().primaryKey(),
+  ...musicbrainzTrackingColumns(),
+})
 
 const albumsSchema = {
   id: text('id').primaryKey(),
@@ -25,6 +38,11 @@ export const albums = sqliteTable('albums', {
 export const albumsStaging = sqliteTable('albumsStaging', {
   ...albumsSchema,
   artistId: text('artist_id').notNull().references(() => artistsStaging.id),
+})
+
+export const albumMusicbrainz = sqliteTable('album_musicbrainz', {
+  albumId: text('album_id').notNull().primaryKey(),
+  ...musicbrainzTrackingColumns(),
 })
 
 const tracksSchema = {

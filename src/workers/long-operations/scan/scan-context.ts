@@ -1,5 +1,6 @@
+import { albumId, artistId } from '#utils/ids'
+
 import type { albumsStaging, artistsStaging } from '#db/schema'
-import { randomUUID } from 'node:crypto'
 
 type ArtistRow = typeof artistsStaging.$inferInsert
 type AlbumRow = typeof albumsStaging.$inferInsert
@@ -23,7 +24,7 @@ export class ScanContext {
     }
 
     const artist: ArtistRow = {
-      id: randomUUID(),
+      id: artistId(name),
       name,
       sortName: name.replace(/^(the|a|an)\s+/i, ''),
       musicbrainzArtistId: mbid ?? null,
@@ -35,7 +36,7 @@ export class ScanContext {
 
   getOrCreateAlbum(
     title: string,
-    artistId: string,
+    artist: ArtistRow,
     extra: { year?: number | null; mbid?: string | null },
   ): { album: AlbumRow; isNew: boolean } {
     const key = `${artistId}::${normalize(title)}`
@@ -44,10 +45,10 @@ export class ScanContext {
     }
 
     const album: AlbumRow = {
-      id: randomUUID(),
+      id: albumId(artist.name, title),
       title,
       sortTitle: title.replace(/^(the|a|an)\s+/i, ''),
-      artistId,
+      artistId: artist.id,
       year: extra.year ?? null,
       musicbrainzAlbumId: extra.mbid ?? null,
     }
@@ -55,16 +56,17 @@ export class ScanContext {
     return { album, isNew: true }
   }
   
-  getOrCreateFallbackAlbum(artistId: string): { album: AlbumRow; isNew: boolean } {
+  getOrCreateFallbackAlbum(artist: ArtistRow): { album: AlbumRow; isNew: boolean } {
     const key = `${artistId}::__unknown__`
     if (this.albumsByKey.has(key)) {
       return { album: this.albumsByKey.get(key)!, isNew: false }
     }
+    const title = '[Unknown Album]'
     const album: AlbumRow = {
-      id: randomUUID(),
-      title: '[Unknown Album]',
-      sortTitle: '[Unknown Album]',
-      artistId,
+      id: albumId(artist.name, title),
+      title,
+      sortTitle: title,
+      artistId: artist.id,
       year: null,
       musicbrainzAlbumId: null,
     }

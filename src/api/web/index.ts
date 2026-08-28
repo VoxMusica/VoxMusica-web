@@ -1,7 +1,8 @@
-import type { FastifyInstance, FastifyPluginAsync } from "fastify"
 import authRoutes from "#api/web/auth/index"
 import systemRoutes from "#api/web/system/index"
 import userRoutes from "#api/web/user/index"
+
+import type { FastifyInstance, FastifyPluginAsync } from "fastify"
 
 /**
  * Encapsulates the routes

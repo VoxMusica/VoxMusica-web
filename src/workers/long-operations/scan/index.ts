@@ -1,13 +1,15 @@
+import { invalidateLibraryCache } from '#cache'
 import { BatchInserter } from "#db/batch-inserter"
 import { db } from "#db/index"
 import { albumsStaging, artistsStaging, tracksStaging } from "#db/schema"
 import { getCurrentScan } from "#services/scans/scans.service"
+import { parseTrackFile } from "./parse-track.ts"
+import { ScanContext } from "./scan-context.ts"
+import { swapStagingIntoMain } from "./staging-swap.ts"
+import { walkLibrary } from "./walker.ts"
+
 import type { Job } from "bullmq"
 import type { Logger } from "pino"
-import { parseTrackFile } from "./scan/parse-track.ts"
-import { ScanContext } from "./scan/scan-context.ts"
-import { walkLibrary } from "./scan/walker.ts"
-import { swapStagingIntoMain } from "./scan/staging-swap.ts"
 
 export const startScan = async (job: Job, logger: Logger) => {
   const scan = await getCurrentScan()
@@ -41,4 +43,6 @@ export const startScan = async (job: Job, logger: Logger) => {
   await trackInserter.drain()
 
   await swapStagingIntoMain()
+
+  await invalidateLibraryCache()
 }

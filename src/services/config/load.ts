@@ -1,9 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+
 import { parse } from 'yaml'
+
 import schema from '#services/config/schema'
 
-function findConfigFile(): string | null {
+const findConfigFile = (): string | null => {
   const CONFIG_DIR = process.env.CONFIG_DIR || '/config'
 
   const candidates = ['config.yaml', 'config.yml', 'config.json'];

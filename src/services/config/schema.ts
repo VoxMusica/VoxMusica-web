@@ -1,6 +1,7 @@
 import convict from 'convict'
-import { SUPPORTED_LOCALES } from '#services/locales/index'
+
 import { enumArrayFormat } from '#services/config/format'
+import { SUPPORTED_LOCALES } from '#services/locales/index'
 
 
 type Config = {

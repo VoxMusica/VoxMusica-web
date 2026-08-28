@@ -1,8 +1,18 @@
-import type { albumsStaging, artistsStaging, tracksStaging } from '#db/schema'
-import { parseFile } from 'music-metadata'
+/**
+ * TODO: look at fanart.tv, TheAudioDB to get images via music brain id
+ * Or Wikimedia Commons with the musicbrain infos (if the link is on the artist page)
+ */
+
 import { stat } from 'node:fs/promises'
+
+import { parseFile } from 'music-metadata'
+
+import { trackId } from '#utils/ids'
+
+import type { albumsStaging, artistsStaging, tracksStaging } from '#db/schema'
 import type { ScanContext } from './scan-context.ts'
-import { randomUUID } from 'node:crypto'
+
+
 
 type ParseResult = {
   track: typeof tracksStaging.$inferInsert
@@ -31,7 +41,7 @@ export const parseTrackFile = async (
     )
 
     const { album, isNew: albumIsNew } = common.album
-      ? ctx.getOrCreateAlbum(common.album, artist.id, {
+      ? ctx.getOrCreateAlbum(common.album, artist, {
           year: common.year ?? null,
           mbid: common.musicbrainz_albumid ?? null,
         })
@@ -42,7 +52,7 @@ export const parseTrackFile = async (
 
     return {
       track: {
-        id: randomUUID(),
+        id: trackId(artist.name, album.title, title, common.track?.no ?? undefined),
         filePath: filePath,
         fileSize: stats.size,
         fileModifiedAt: stats.mtime,

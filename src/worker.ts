@@ -1,38 +1,26 @@
-import config from '#config'
-import { redis } from '#redis'
-import { startScan } from '#workers/start-scan'
-import { Worker } from 'bullmq'
 import { join } from 'node:path'
 
+import { type WorkerOptions } from 'bullmq'
 import pino from 'pino'
 
-export const logger = pino({
+import config from '#config'
+import logger from '#logger'
+import { redis } from '#redis'
+import { spawnCoverArtWorker } from '#workers/cover-art/index'
+import { spawnLongOperationWorker } from '#workers/long-operations/index'
+import { spawnMusicbrainLookupWorker } from '#workers/mb-lookup/index'
+
+
+export const workerLogger = logger({
   level: config.get('logging.level')
 })
 pino.destination(join(config.get('logging.dir'), 'worker.log'))
 
-const worker = new Worker(
-  'long-operations',
-  async job => {
-    logger.info(`Starting job ${job.id}`);
-
-    switch (job.name) {
-      case 'startScan':
-        return startScan(job, logger)
-      default:
-        throw new Error(`Unknown job type: ${job.name}`)
-    }
-  },
-  {
+const baseOptions: WorkerOptions = { 
     connection: redis,
-    concurrency: 5,
-  }
-);
+    concurrency: 1
+}
 
-worker.on('completed', job => {
-  console.log(`Job ${job.id} completed`);
-});
-
-worker.on('failed', (job, err) => {
-  console.error(`Job ${job?.id} failed`, err);
-})
+spawnLongOperationWorker(workerLogger, baseOptions)
+spawnMusicbrainLookupWorker(workerLogger, baseOptions)
+spawnCoverArtWorker(workerLogger, baseOptions)

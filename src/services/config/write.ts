@@ -1,4 +1,5 @@
 import { readFile, writeFile } from 'node:fs/promises'
+
 import { parseDocument } from 'yaml'
 
 export const updateConfigValue = async (filePath: string, keyPath: string[], value: unknown) => {

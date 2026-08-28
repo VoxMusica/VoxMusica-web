@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+
 import { findUserByUsername } from '#services/users/users.service'
 
 interface SubsonicAuthParams {
@@ -6,7 +7,7 @@ interface SubsonicAuthParams {
   p?: string
 }
 
-export async function verifySubsonicCredentials(params: SubsonicAuthParams) {
+export const verifySubsonicCredentials = async (params: SubsonicAuthParams) => {
   const { u, p } = params
 
   if (!u || !p) return null;

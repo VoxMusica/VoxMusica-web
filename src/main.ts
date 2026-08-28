@@ -1,22 +1,19 @@
 import { join } from 'node:path'
-import Fastify from 'fastify'
+
 import cachingPlugin from '@fastify/caching'
+import fastifyCookie from '@fastify/cookie'
 import jwt from '@fastify/jwt'
+import Fastify from 'fastify'
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 
-// `abstract-cache` does not ship TypeScript declarations.
-// @ts-expect-error The package is untyped; its runtime API is used below.
-import abstractCache from 'abstract-cache'
-
-import { config } from '#config'
 
 import { apiRoutes } from '#api/index'
+import { cache } from '#cache'
+import { config } from '#config'
+import logger from '#logger'
 import authenticatePlugin from '#plugins/authenticate'
 import isAdminPlugin from '#plugins/is-admin'
 import isAdminOrBootstrap from '#plugins/is-admin-or-bootstrap'
-import fastifyCookie from '@fastify/cookie'
-import { redis } from '#redis'
-// import { Engine } from '#services/engine/engine'
 
 const logDir = config.get('logging.dir')
 const logLevel = config.get('logging.level')
@@ -27,7 +24,7 @@ const logFilename =  config.get('logging.filename')
 // await engine.start()
 
 const app = Fastify({
-  logger: logDir
+  loggerInstance: logger(logDir
     ? {
         level: logLevel,
         transport: {
@@ -40,7 +37,8 @@ const app = Fastify({
           ],
         },
       }
-    : { level: logLevel }, // stdout only, default Pino behavior
+    : { level: logLevel }  // stdout only, default Pino behavior
+  ),
 })
 
 app.setValidatorCompiler(validatorCompiler)
@@ -62,13 +60,7 @@ app.register(isAdminOrBootstrap)
 
 
 
-const cache = abstractCache({
-  useAwait: true,
-  driver: {
-    name: 'abstract-cache-redis',
-    options: { client: redis },
-  },
-})
+
 app.register(cachingPlugin, { cache })
 
 app.register(apiRoutes)
@@ -88,7 +80,7 @@ app.decorateRequest('subsonicUser', undefined)
 app.listen({
   port: config.get('server.port'),
   host: config.get('server.host'),
-}, function (err, address) {
+}, (err, address) => {
   if (err) {
     app.log.error(err)
     process.exit(1)

@@ -1,9 +1,12 @@
-import { drizzle } from 'drizzle-orm/libsql'
+import path from 'node:path'
+
 import { createClient, type ResultSet } from '@libsql/client'
+import { drizzle } from 'drizzle-orm/libsql'
 
 import config from '#config'
 import * as schema from '#db/schema'
-import path from 'node:path'
+
+
 import type { BaseSQLiteDatabase } from 'drizzle-orm/sqlite-core'
 
 export type Database = BaseSQLiteDatabase<

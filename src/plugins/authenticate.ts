@@ -1,4 +1,5 @@
 import fp from 'fastify-plugin'
+
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 
 const authenticatePluginFnc: FastifyPluginAsync = async (fastify) => {
