@@ -14,7 +14,11 @@ export interface SubsonicRequest{
   Querystring: SubsonicQuerystring 
 }
 
-export const subsonicOk = (params: SubsonicQuerystring, reply: FastifyReply, payload: Record<string, unknown> = {}) => {
+export const subsonicOk = (
+  params: SubsonicQuerystring,
+  reply: FastifyReply,
+  payload: object = {}
+) => {
   const response =  {
     status: 'ok',
     version: API_VERSION,

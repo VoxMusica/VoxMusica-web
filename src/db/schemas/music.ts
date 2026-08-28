@@ -17,6 +17,7 @@ const artistsSchema = {
 }
 export const artists = sqliteTable('artists', artistsSchema)
 export const artistsStaging = sqliteTable('artistsStaging', artistsSchema)
+export type Artist = typeof artists.$inferInsert
 
 export const artistMusicbrainz = sqliteTable('artist_musicbrainz', {
   artistId: text('artist_id').notNull().primaryKey(),

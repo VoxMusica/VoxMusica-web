@@ -1,4 +1,5 @@
 import config from "#config"
+import { getArtistsHandler } from "./browsing/get-artists.handler.ts"
 import { getIndexesHandler } from "./browsing/get-indexes.handler.ts"
 import { subsonicOk, type SubsonicRequest } from "./responses/subsonic.response.ts"
 
@@ -15,6 +16,7 @@ export const browsingRoutes: FastifyPluginAsync = async (app: FastifyInstance) =
     })
   })
   app.register(getIndexesHandler)
+  app.register(getArtistsHandler)
 }
 
 

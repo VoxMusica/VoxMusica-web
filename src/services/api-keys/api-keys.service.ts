@@ -74,6 +74,18 @@ export const findApiKeyByValue = (keyValue: string) => db.select({
   .where(eq(apiKeys.keyHash, getKeyHash(keyValue)))
   .then(v => v?.at(0) ?? null)
 
+export const findApiKeyById = (id: string) => db.select({
+    id: apiKeys.id,
+    label: apiKeys.label,
+    lastUsedAt: apiKeys.lastUsedAt,
+    createdAt: apiKeys.createdAt,
+    expiresAt: apiKeys.expiresAt,
+    userId: apiKeys.userId
+  })
+  .from(apiKeys)
+  .where(eq(apiKeys.id, getKeyHash(id)))
+  .then(v => v?.at(0) ?? null)
+
   export const touchApiKeyLastUsed = (id: string) => db
     .update(apiKeys)
     .set({lastUsedAt: new Date()})
