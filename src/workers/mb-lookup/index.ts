@@ -1,10 +1,10 @@
 import { Worker, type WorkerOptions } from "bullmq"
 
+import { MUSICBRAINZ_LOOKUP_QUEUE } from "#workers/queues"
 import { lookArtistCover } from "./artist-cover.ts"
 
 import type { Logger } from "pino"
 
-export const MUSICBRAINZ_LOOKUP_QUEUE = 'mb-lookup'
 
 export const spawnMusicbrainLookupWorker = (logger: Logger, baseOptions: WorkerOptions) => {
   const worker = new Worker(
@@ -26,10 +26,10 @@ export const spawnMusicbrainLookupWorker = (logger: Logger, baseOptions: WorkerO
   )
 
   worker.on('completed', job => {
-    logger.info(`Job ${job.id} completed`);
+    logger.info(`Job ${job.id} completed`)
   });
 
   worker.on('failed', (job, err) => {
-    logger.error(`Job ${job?.id} failed`, err);
+    logger.error({ err }, `Job ${job?.id} failed`)
   })
 }

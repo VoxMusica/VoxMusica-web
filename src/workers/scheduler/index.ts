@@ -1,10 +1,10 @@
 import { Worker, type WorkerOptions } from "bullmq"
 
+import { SCHEDULER_QUEUE } from "#workers/queues"
 import { armDailySweep, runSweep } from "./musicbrainz.ts"
 
 import type { Logger } from "pino"
 
-export const SCHEDULER_QUEUE = 'scheduler'
 
 export const spawnSchedulerWorker = (logger: Logger, baseOptions: WorkerOptions) => {
   const worker = new Worker(
@@ -12,7 +12,7 @@ export const spawnSchedulerWorker = (logger: Logger, baseOptions: WorkerOptions)
     async job => {
       logger.info(`Starting job ${job.id}`);
 
-      await runSweep()
+      await runSweep({force: job.data?.force})
       await armDailySweep()
     },
     baseOptions
@@ -23,6 +23,6 @@ export const spawnSchedulerWorker = (logger: Logger, baseOptions: WorkerOptions)
   });
 
   worker.on('failed', (job, err) => {
-    logger.error(`Job ${job?.id} failed`, err);
+    logger.error({err}, `Job ${job?.id} failed`)
   })
 }

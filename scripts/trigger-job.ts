@@ -2,9 +2,9 @@
  * usage: `yarn trigger <queue-name> <job-name> <json payload>`
  */
 
-import { coverArtQueue, mbLookupQueue, schedulerQueue } from "#workers/queues"
-
-
+import { coverArtQueue } from "#workers/cover-art/queue"
+import { mbLookupQueue } from "#workers/mb-lookup/queue"
+import { schedulerQueue } from "#workers/scheduler/queue"
 
 const QUEUES = { 'mb-lookup': mbLookupQueue, 'cover-art': coverArtQueue, scheduler: schedulerQueue } as const
 

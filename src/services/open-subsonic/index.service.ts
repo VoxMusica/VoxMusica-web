@@ -1,7 +1,7 @@
-import { getAllArtists } from "#services/music/artists.service"
+import { getAllArtistsWithAlbumCount } from "#services/music/artists.service"
 import { ignoredArticles } from "./config.ts"
 
-import type { Artist } from "#db/schema"
+import type { Artist, ArtistWithAlbumCount } from "#db/schema"
 
 export const getIndexLetter = (title: string): string => {
   const pattern = new RegExp(String.raw`^(${ignoredArticles.join('|')})\\s+`, 'i')
@@ -13,8 +13,8 @@ export const getIndexLetter = (title: string): string => {
 }
 
 
-export const getAllArtistsByLetter: () => Promise<Map<string, Artist[]>> = async ()  => {
-  const artists = await getAllArtists()
+export const getAllArtistsByLetter: () => Promise<Map<string, ArtistWithAlbumCount[]>> = async ()  => {
+  const artists = await getAllArtistsWithAlbumCount()
   return artists.reduce((acc, artist) => {
     const id = getIndexLetter(artist.name)
     if(!acc.has(id)){

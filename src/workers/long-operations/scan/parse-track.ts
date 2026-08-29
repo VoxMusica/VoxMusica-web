@@ -45,7 +45,7 @@ export const parseTrackFile = async (
           year: common.year ?? null,
           mbid: common.musicbrainz_albumid ?? null,
         })
-      : ctx.getOrCreateFallbackAlbum(artist.id)
+      : ctx.getOrCreateFallbackAlbum(artist)
 
     const albumId = album.id
     const newAlbum = albumIsNew ? album : undefined

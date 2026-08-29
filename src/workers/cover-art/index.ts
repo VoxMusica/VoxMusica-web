@@ -1,10 +1,9 @@
 import { Worker, type WorkerOptions } from "bullmq"
 
+import { COVER_ART_QUEUE } from "#workers/queues"
 import { lookAlbumCover } from "./album.ts"
 
 import type { Logger } from "pino"
-
-export const COVER_ART_QUEUE = 'cover-art'
 
 export const spawnCoverArtWorker = (logger: Logger, baseOptions: WorkerOptions) => {
   const worker = new Worker(
@@ -26,10 +25,10 @@ export const spawnCoverArtWorker = (logger: Logger, baseOptions: WorkerOptions) 
   )
 
   worker.on('completed', job => {
-    logger.info(`Job ${job.id} completed`);
+    logger.info(`Job ${job.id} completed`)
   });
 
   worker.on('failed', (job, err) => {
-    logger.error(`Job ${job?.id} failed`, err);
+    logger.error({ err }, `Job ${job?.id} failed`)
   })
 }

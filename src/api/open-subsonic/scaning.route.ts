@@ -1,5 +1,5 @@
 import { createScan, getCurrentScan } from "#services/scans/scans.service"
-import { longOperationQueue } from "#workers/queues"
+import { longOperationQueue } from "#workers/long-operations/queue"
 import { subsonicOk, type SubsonicRequest } from './responses/subsonic.response.ts'
 
 import type { FastifyInstance, FastifyPluginAsync } from "fastify"

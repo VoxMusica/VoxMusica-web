@@ -39,6 +39,18 @@ type Config = {
       port: number,
     },
   },
+  metadatasources: {
+    fanart: {
+      apiKey: string
+    },
+    audioDb: {
+      apiKey: string
+    },
+    spotify: {
+      id: string
+      secret: string
+    }
+  }
 }
 
 const schema = convict<Config>({
@@ -155,6 +167,38 @@ const schema = convict<Config>({
         env: 'REDIS_PORT',
       },
     },
+  },
+  metadatasources: {
+    fanart: {
+      apiKey: {
+        doc: 'Fan art api key',
+        format: String,
+        default: '',
+        env: 'FANART_API_KEY',
+      },
+    },
+    audioDb: {
+      apiKey: {
+        doc: 'AudioDB api key',
+        format: String,
+        default: '',
+        env: 'AUDIO_DB_API_KEY',
+      },
+    },
+    spotify: {
+      id: {
+        doc: 'Spotify client id',
+        format: String,
+        default: '',
+        env: 'SPOTIFY_CLIENT_ID',
+      },
+      secret: {
+        doc: 'Spotify client secret',
+        format: String,
+        default: '',
+        env: 'SPOTIFY_CLIENT_SECRET',
+      },
+    }
   }
 });
 

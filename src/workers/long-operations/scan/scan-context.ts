@@ -18,7 +18,6 @@ export class ScanContext {
       return { artist: this.artistsByMbid.get(mbid)!, isNew: false }
     }
     const key = normalize(name)
-    console.log(key, Object.keys(this.artistsByName))
     if (this.artistsByName.has(key)) {
       return { artist: this.artistsByName.get(key)!, isNew: false }
     }

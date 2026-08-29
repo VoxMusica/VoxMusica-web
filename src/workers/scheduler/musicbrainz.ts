@@ -1,10 +1,12 @@
 import { randomInt } from "node:crypto"
 
-import { isNull, lt, or } from "drizzle-orm"
+import { isNull, lt, or, eq } from "drizzle-orm"
 
 import { db } from "#db/index"
-import { albumMusicbrainz, artistMusicbrainz } from "#db/schema"
-import { coverArtQueue, mbLookupQueue, schedulerQueue } from "#workers/queues"
+import { albumMusicbrainz, albums, artistMusicbrainz, artists } from "#db/schema"
+import { coverArtQueue } from "#workers/cover-art/queue"
+import { mbLookupQueue } from "#workers/mb-lookup/queue"
+import { schedulerQueue } from "./queue.ts"
 
 const WINDOW_START_HOUR = 8
 const WINDOW_END_HOUR = 22
@@ -36,17 +38,26 @@ export const staleFilterArtist = (col: typeof artistMusicbrainz.lastFetchedAt) =
 export const staleFilterAlbum = (col: typeof albumMusicbrainz.lastFetchedAt) =>
   or(isNull(col), lt(col, new Date(Date.now() - STALE_AFTER_MS)))
 
-export const runSweep = async () => {
-  const staleArtists = await db.select().from(artistMusicbrainz).where(staleFilterArtist(artistMusicbrainz.lastFetchedAt))
-  const staleAlbums = await db.select().from(albumMusicbrainz).where(staleFilterAlbum(albumMusicbrainz.lastFetchedAt))
+export const runSweep = async (opts: { force?: boolean } = {}) => {
+  const staleArtists = await db
+    .select({ artistId: artists.id, lastFetchedAt: artistMusicbrainz.lastFetchedAt })
+    .from(artists)
+    .leftJoin(artistMusicbrainz, eq(artists.id, artistMusicbrainz.artistId))
+    .where(opts.force ? undefined : staleFilterArtist(artistMusicbrainz.lastFetchedAt))
+
+  // const staleAlbums = await db
+  //   .select({ albumId: albums.id, lastFetchedAt: albumMusicbrainz.lastFetchedAt })
+  //   .from(albums)
+  //   .leftJoin(albumMusicbrainz, eq(albums.id, albumMusicbrainz.albumId))
+  //   .where(opts.force ? undefined : staleFilterAlbum(albumMusicbrainz.lastFetchedAt))
 
   for (const row of staleArtists) {
-    await mbLookupQueue.add('artist', { artistId: row.artistId })
+    // await mbLookupQueue.add('artist', { artistId: row.artistId })
     await mbLookupQueue.add('artist-cover', { artistId: row.artistId })
   }
 
-  for (const row of staleAlbums) {
-    await mbLookupQueue.add('album', { albumId: row.albumId })
-    await coverArtQueue.add('album', { albumId: row.albumId })
-  }
+  // for (const row of staleAlbums) {
+  //   await mbLookupQueue.add('album', { albumId: row.albumId })
+  //   await coverArtQueue.add('album', { albumId: row.albumId })
+  // }
 }

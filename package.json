@@ -38,7 +38,6 @@
     "@fastify/cookie": "^11.1.2",
     "@fastify/jwt": "^10.2.2",
     "@libsql/client": "^0.17.4",
-    "abstract-cache": "^1.0.1",
     "abstract-cache-redis": "^2.0.0",
     "bcrypt": "^6.0.0",
     "bullmq": "^6.2.2",

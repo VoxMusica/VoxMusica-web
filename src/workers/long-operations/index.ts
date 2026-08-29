@@ -1,10 +1,10 @@
 import { Worker, type WorkerOptions } from "bullmq"
 
 import { startScan } from "#workers/long-operations/scan/index"
+import { LONG_OPERATION_QUEUE } from "#workers/queues"
 
 import type { Logger } from "pino"
 
-export const LONG_OPERATION_QUEUE = 'long-operations'
 
 export const spawnLongOperationWorker = (logger: Logger, baseOptions: WorkerOptions) => {
   const worker = new Worker(
@@ -26,10 +26,10 @@ export const spawnLongOperationWorker = (logger: Logger, baseOptions: WorkerOpti
   )
 
   worker.on('completed', job => {
-    console.log(`Job ${job.id} completed`);
+    logger.info(`Job ${job.id} completed`)
   });
 
   worker.on('failed', (job, err) => {
-    console.error(`Job ${job?.id} failed`, err);
+    logger.error({ err }, `Job ${job?.id} failed`)
   })
 }

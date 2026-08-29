@@ -17,11 +17,8 @@ export const startScan = async (job: Job, logger: Logger) => {
     logger.warn("There is already a scan running")
   }
 
-  console.log('lets go')
-
   const ctx = new ScanContext()
   const trackInserter = new BatchInserter<typeof tracksStaging.$inferInsert>(500, async (rows) => {
-    console.log('tracks', rows) 
     await db.insert(tracksStaging).values(rows)
   })
   const albumInserter = new BatchInserter<typeof albumsStaging.$inferInsert>(100, async (rows) => { await db.insert(albumsStaging).values(rows) })
@@ -43,6 +40,6 @@ export const startScan = async (job: Job, logger: Logger) => {
   await trackInserter.drain()
 
   await swapStagingIntoMain()
-
+  console.log('invalidate cache')
   await invalidateLibraryCache()
 }

@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
+import { sqliteTable, text, integer, index, primaryKey } from 'drizzle-orm/sqlite-core'
 
 import { users } from '#db/schemas/user'
 
@@ -7,6 +7,7 @@ const musicbrainzTrackingColumns = () => ({
   status: text('status', { enum: ['pending', 'matched', 'not_found', 'error'] as const }).notNull().default('pending'),
   lastAttemptAt: integer('last_attempt_at', { mode: 'timestamp' }),
   lastFetchedAt: integer('last_fetched_at', { mode: 'timestamp' }),
+  source: text('source'),
 })
 
 const artistsSchema = {
@@ -18,11 +19,17 @@ const artistsSchema = {
 export const artists = sqliteTable('artists', artistsSchema)
 export const artistsStaging = sqliteTable('artistsStaging', artistsSchema)
 export type Artist = typeof artists.$inferInsert
+export interface ArtistWithAlbumCount extends Artist{
+  albumCount: number
+}
 
 export const artistMusicbrainz = sqliteTable('artist_musicbrainz', {
   artistId: text('artist_id').notNull().primaryKey(),
   ...musicbrainzTrackingColumns(),
-})
+}, (table) => [
+  index('artist_musicbrainz_musicbrainz_id_idx').on(table.musicbrainzId),
+  index('artist_musicbrainz_artist_id_idx').on(table.artistId),
+])
 
 const albumsSchema = {
   id: text('id').primaryKey(),
@@ -44,7 +51,10 @@ export const albumsStaging = sqliteTable('albumsStaging', {
 export const albumMusicbrainz = sqliteTable('album_musicbrainz', {
   albumId: text('album_id').notNull().primaryKey(),
   ...musicbrainzTrackingColumns(),
-})
+}, (table) => [
+  index('album_musicbrainz_musicbrainz_id_idx').on(table.musicbrainzId),
+  index('album_musicbrainz_album_id_idx').on(table.albumId),
+])
 
 const tracksSchema = {
   id: text('id').primaryKey(),
@@ -63,6 +73,7 @@ const tracksSchema = {
   channels: integer('channels'),
   musicbrainzTrackId: text('musicbrainz_track_id'),
   playCount: integer('play_count').notNull().default(0),
+  lastPlayedAt: integer('last_played_at', { mode: 'timestamp' }),
 }
 export const tracks = sqliteTable('tracks', {
   ...tracksSchema,
@@ -74,6 +85,20 @@ export const tracksStaging = sqliteTable('tracksStaging', {
   artistId: text('artist_id').notNull().references(() => artistsStaging.id),
   albumId: text('album_id').notNull().references(() => albumsStaging.id),
 })
+
+export const playEvents = sqliteTable('play_events', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  trackId: text('track_id').notNull(),
+  playedAt: integer('played_at', { mode: 'timestamp' }).notNull(),
+  percentPlayed: integer('percent_played'), // 0-100, how far playback reached
+  counted: integer('counted', { mode: 'boolean' }).notNull(), // crossed the "real play" threshold
+}, (table) => [
+  index('play_events_track_id_idx').on(table.trackId),
+  index('play_events_user_id_idx').on(table.userId),
+  index('play_events_played_at_idx').on(table.playedAt),
+])
+export type PlayEvent = typeof playEvents.$inferInsert
 
 export const playlists = sqliteTable('playlists', {
   id: text('id').primaryKey(),
@@ -88,3 +113,23 @@ export const playlistTracks = sqliteTable('playlist_tracks', {
   trackId: text('track_id').notNull().references(() => tracks.id),
   position: integer('position').notNull(),
 })
+
+export const favorites = sqliteTable('favorites', {
+  userId: text('user_id').notNull().references(() => users.id),
+  itemType: text('item_type', { enum: ['artist', 'album', 'track'] as const }).notNull(),
+  itemId: text('item_id').notNull(),
+  starredAt: integer('starred_at', { mode: 'timestamp' }).notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.itemType, table.itemId] }),
+])
+export type Favorite = typeof favorites.$inferInsert
+
+export const ratings = sqliteTable('ratings', {
+  userId: text('user_id').notNull().references(() => users.id),
+  itemType: text('item_type', { enum: ['artist', 'album', 'track'] as const }).notNull(),
+  itemId: text('item_id').notNull(),
+  rating: integer('rating').notNull(), // 1-5, validate range in app code (SQLite has no CHECK via Drizzle column builder)
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.itemType, table.itemId] }),
+])
+export type Rating = typeof ratings.$inferInsert

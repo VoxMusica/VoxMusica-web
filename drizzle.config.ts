@@ -5,7 +5,6 @@ import { defineConfig } from 'drizzle-kit'
 import { loadConfig } from "./src/services/config/load.ts"
 
 const config = loadConfig()
-console.log( `file:${path.join(config.get('data.dir'), config.get('data.filename'))}`)
 export default defineConfig({
   schema: './src/db/schema.ts',
   out: './drizzle',
@@ -13,4 +12,5 @@ export default defineConfig({
   dbCredentials: {
     url: `file:${path.join(config.get('data.dir'), config.get('data.filename'))}`,
   },
+  verbose: true,
 })
