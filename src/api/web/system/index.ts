@@ -1,4 +1,4 @@
-import infoRoute from './info.route.ts'
+import infoRoute from './info.routes.ts'
 
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify'
 

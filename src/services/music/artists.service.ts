@@ -41,7 +41,7 @@ export const getArtist: GetArtist = (async (id: string, withMBStatus: boolean = 
 
 export const updateArtistMusicbrainzLastFetched = (artistId: string, saved: boolean, source: string) =>
   db.insert(artistMusicbrainz)
-    .values({ artistId, lastFetchedAt: new Date(), lastAttemptAt: new Date(), status: saved ? 'matched' : 'not_found' })
+    .values({ artistId, lastFetchedAt: new Date(), lastAttemptAt: new Date(), status: saved ? 'matched' : 'not_found', source })
     .onConflictDoUpdate({
       target: artistMusicbrainz.artistId,
       set: { lastFetchedAt: new Date(), lastAttemptAt: new Date(), status: saved ? 'matched' : 'not_found' },

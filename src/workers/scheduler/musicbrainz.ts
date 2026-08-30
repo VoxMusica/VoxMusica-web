@@ -1,10 +1,9 @@
 import { randomInt } from "node:crypto"
 
-import { isNull, lt, or, eq } from "drizzle-orm"
+import { eq, isNull, lt, or } from "drizzle-orm"
 
 import { db } from "#db/index"
-import { albumMusicbrainz, albums, artistMusicbrainz, artists } from "#db/schema"
-import { coverArtQueue } from "#workers/cover-art/queue"
+import { albumMusicbrainz, artistMusicbrainz, artists } from "#db/schema"
 import { mbLookupQueue } from "#workers/mb-lookup/queue"
 import { schedulerQueue } from "./queue.ts"
 

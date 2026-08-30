@@ -84,6 +84,7 @@ const findFallbackImageUrl = async (artist: Artist, relations:  IRelation[] | un
 
 // MusicBrainz images
 const findMusicBrainzImage = (relations:  IRelation[] | undefined, logger: Logger) => {
+  logger.debug(`Searching on musicbrainz`)
   const imageRel = relations?.find(
     (rel) => rel.type === 'image' && rel['target-type'] === 'url',
   )
@@ -92,6 +93,7 @@ const findMusicBrainzImage = (relations:  IRelation[] | undefined, logger: Logge
 
 // Fanart images
 const findFanartImage = async (musicBrainzId: string | undefined, logger: Logger) => {
+  logger.debug(`Searching on fanart`)
   if(musicBrainzId == null){
     return null
   }
@@ -122,6 +124,7 @@ const extractWikidataId = (relations: IRelation[] | undefined) => {
 }
 
 const findWikidataImage = async (relations: IRelation[] | undefined, logger: Logger) => {
+  logger.debug(`Searching on wikidata`)
   const qid = extractWikidataId(relations)
   if (!qid) return null
 
@@ -155,6 +158,7 @@ const findWikidataImage = async (relations: IRelation[] | undefined, logger: Log
 
 // AudioDB
 const findAudioDbImage = async (musicBrainzId: string | undefined, logger: Logger) => {
+  logger.debug(`Searching on audioDb`)
   if(musicBrainzId == null){
     return null
   }

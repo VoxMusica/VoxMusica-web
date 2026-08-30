@@ -28,7 +28,7 @@
     "dev": "nodemon --exec \"node --conditions=development src/main.ts\"",
     "worker": "nodemon --exec \"node --conditions=development src/worker.ts\"",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "eslint --fix .",
     "db:generate": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit migrate",
     "db:studio": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit studio"
@@ -62,6 +62,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@types/bcrypt": "^6.0.0",
     "@types/convict": "^6.1.6",
