@@ -1,0 +1,151 @@
+import { sql } from 'drizzle-orm'
+import { sqliteTable, text, integer, index, primaryKey } from 'drizzle-orm/sqlite-core'
+
+import { users } from '#db/schemas/user'
+
+const musicbrainzTrackingColumns = () => ({
+  musicbrainzId: text('musicbrainz_id'),
+  status: text('status', { enum: ['pending', 'matched', 'not_found', 'error'] as const }).notNull().default('pending'),
+  lastAttemptAt: integer('last_attempt_at', { mode: 'timestamp' }),
+  lastFetchedAt: integer('last_fetched_at', { mode: 'timestamp' }),
+  source: text('source'),
+})
+
+const artistsSchema = {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  sortName: text('sort_name'),
+  musicbrainzArtistId: text('music_brain_artist_id'),
+  createdAt: integer('created_at', { mode: 'timestamp'}).notNull().default(new Date()),
+}
+export const artists = sqliteTable('artists', artistsSchema)
+export const artistsStaging = sqliteTable('artistsStaging', artistsSchema)
+export type Artist = typeof artists.$inferInsert
+export interface ArtistWithExtraData extends Artist{
+  albumCount: number | null
+  userRating: number | null
+  starred: Date | null
+}
+
+export const artistMusicbrainz = sqliteTable('artist_musicbrainz', {
+  artistId: text('artist_id').notNull().primaryKey(),
+  ...musicbrainzTrackingColumns(),
+}, (table) => [
+  index('artist_musicbrainz_musicbrainz_id_idx').on(table.musicbrainzId),
+  index('artist_musicbrainz_artist_id_idx').on(table.artistId),
+])
+
+const albumsSchema = {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  year: integer('year'),
+  coverPath: text('cover_path'),
+  sortTitle: text('sort_title'),
+  musicbrainzAlbumId: text('music_brain_album_id'),
+  createdAt: integer('created_at', { mode: 'timestamp'}).notNull().default(sql`(unixepoch())`),
+}
+export const albums = sqliteTable('albums', {
+  ...albumsSchema,
+  artistId: text('artist_id').notNull().references(() => artists.id),
+})
+export const albumsStaging = sqliteTable('albumsStaging', {
+  ...albumsSchema,
+  artistId: text('artist_id').notNull().references(() => artistsStaging.id),
+})
+export type Album = typeof albums.$inferInsert
+export interface AlbumWithExtraData extends Album{
+  artistId: string
+  userRating: number | null
+  starred: Date | null
+  songCount: number
+  duration: number
+  playCount: number | null
+  played: Date | null
+}
+
+export const albumMusicbrainz = sqliteTable('album_musicbrainz', {
+  albumId: text('album_id').notNull().primaryKey(),
+  ...musicbrainzTrackingColumns(),
+}, (table) => [
+  index('album_musicbrainz_musicbrainz_id_idx').on(table.musicbrainzId),
+  index('album_musicbrainz_album_id_idx').on(table.albumId),
+])
+
+const tracksSchema = {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  filePath: text('file_path').notNull(),
+  fileSize: integer('file_size').notNull(),
+  fileModifiedAt: integer('file_modified_at', { mode: 'timestamp'}).notNull(),
+  duration: integer('duration'),
+  trackNumber: integer('track_number'),
+  discNumber: integer('disc_number'),
+  genre: text('genre'),
+  year: integer('year'),
+  codec: text('codec'),
+  bitrate: integer('bitrate'),
+  sampleRate: integer('sample_rate'),
+  channels: integer('channels'),
+  musicbrainzTrackId: text('musicbrainz_track_id'),
+  playCount: integer('play_count').notNull().default(0),
+  lastPlayedAt: integer('last_played_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp'}).notNull().default(new Date()),
+}
+export const tracks = sqliteTable('tracks', {
+  ...tracksSchema,
+  artistId: text('artist_id').notNull().references(() => artists.id),
+  albumId:  text('album_id').notNull().references(() => albums.id),
+})
+export const tracksStaging = sqliteTable('tracksStaging', {
+  ...tracksSchema,
+  artistId: text('artist_id').notNull().references(() => artistsStaging.id),
+  albumId: text('album_id').notNull().references(() => albumsStaging.id),
+})
+
+export const playEvents = sqliteTable('play_events', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  trackId: text('track_id').notNull(),
+  playedAt: integer('played_at', { mode: 'timestamp' }).notNull(),
+  percentPlayed: integer('percent_played'), // 0-100, how far playback reached
+  counted: integer('counted', { mode: 'boolean' }).notNull(), // crossed the "real play" threshold
+}, (table) => [
+  index('play_events_track_id_idx').on(table.trackId),
+  index('play_events_user_id_idx').on(table.userId),
+  index('play_events_played_at_idx').on(table.playedAt),
+])
+export type PlayEvent = typeof playEvents.$inferInsert
+
+export const playlists = sqliteTable('playlists', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  userId: text('user_id').notNull().references(() => users.id),
+  createdAt: integer('created_at', { mode: 'timestamp'}).notNull(),
+})
+
+export const playlistTracks = sqliteTable('playlist_tracks', {
+  id: text('id').primaryKey(),
+  playlistId: text('playlist_id').notNull().references(() => playlists.id),
+  trackId: text('track_id').notNull().references(() => tracks.id),
+  position: integer('position').notNull(),
+})
+
+export const favorites = sqliteTable('favorites', {
+  userId: text('user_id').notNull().references(() => users.id),
+  itemType: text('item_type', { enum: ['artist', 'album', 'track'] as const }).notNull(),
+  itemId: text('item_id').notNull(),
+  starredAt: integer('starred_at', { mode: 'timestamp' }).notNull(),
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.itemType, table.itemId] }),
+])
+export type Favorite = typeof favorites.$inferInsert
+
+export const ratings = sqliteTable('ratings', {
+  userId: text('user_id').notNull().references(() => users.id),
+  itemType: text('item_type', { enum: ['artist', 'album', 'track'] as const }).notNull(),
+  itemId: text('item_id').notNull(),
+  rating: integer('rating').notNull(), // 1-5, validate range in app code (SQLite has no CHECK via Drizzle column builder)
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.itemType, table.itemId] }),
+])
+export type Rating = typeof ratings.$inferInsert

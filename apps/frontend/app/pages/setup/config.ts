@@ -1,0 +1,1 @@
+export const SETUP_STEPS = ['/setup', '/setup/admin-account', '/setup/library-path']

@@ -1,0 +1,83 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "backend:dev",
+      "type": "shell",
+      "command": "yarn backend:dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "args": ["-NoExit", "-Command"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "backend",
+        "clear": false
+      },
+      "icon": {
+        "id": "server-process",
+        "color": "terminal.ansiBlue"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "backend:worker",
+      "type": "shell",
+      "command": "yarn backend:worker",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "args": ["-NoExit", "-Command"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "backend",
+        "clear": false
+      },
+      "icon": {
+        "id": "gear",
+        "color": "terminal.ansiBlue"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "frontend:dev",
+      "type": "shell",
+      "command": "yarn frontend:dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "args": ["-NoExit", "-Command"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "frontend",
+        "clear": false
+      },
+      "icon": {
+        "id": "browser",
+        "color": "terminal.ansiGreen"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}

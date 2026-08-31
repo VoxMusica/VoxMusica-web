@@ -1,0 +1,100 @@
+bootstrap:
+  loading: Loading
+  error: Looks like something crawled into the server. We're on it.
+
+common:
+  optional: optional
+  create: Create
+  cancel: Cancel
+
+setup:
+  welcome:
+    title: Welcome to VoxMusica
+    description: Let's get your server set up — this will only take a few quick configuration steps.
+  done: 'Configuration finished'
+  adminAccount:
+    heading: Create your admin account
+    subtitle: This account will have full access to manage your server.
+    confirmPassword: Confirm your password
+    errors:
+      usernameMin: Username must be at least 3 characters
+      passwordMin: Password must be at least 12 characters
+      passwordMismatch: Passwords do not match
+
+topmenu:
+  admin: Admin
+  params: Parameters
+  logout:  Log out
+
+user:
+  username: Username
+  password: Password
+
+auth:
+  login:
+    heading: Login
+    validate: Login
+
+ui:
+  previous: Previous
+  next: Next
+
+password:
+  strength:
+    weak: Weak
+    fair: Fair
+    good: Good
+    strong: Strong
+
+library:
+  sidebar:
+    title: Album
+    artists: Artists
+    artists-recent: Newly added
+    artists-popular: Popular
+    artists-most-listened: Most listened
+    artists-with-new-release: With new releases
+    albums: Albums
+    tracks: Tracks
+    genres: Genres
+    playlists: Playlists
+  getTopSongs:
+    validation:
+      artistOrIdRequired: artist name or id is required
+
+user-settings:
+  sidebar:
+    title: Settings
+    user: General settings
+    security: Security
+  apiKeys:
+    title: API keys
+    new: new API key
+    description: View, revoke or create API keys
+    label: Key name
+    labelPlaceholder: e.g. My awesome audio app
+    createdAt: Created at
+    expiresAt: Expires at
+    expiresAtMissing: Never expires
+    lastUsedAt: Last used at
+    lastUsedAtMissing: Never used
+    createError: Error while creating api key, contact the app admin
+    copyWarning: Make sure to copy this key now, you won't be able to see it again.
+    revoke: Revoke
+    revokeTitle: Revoke this API key?
+    revokeDescription: This will permanently revoke the key "{{label}}". Any application or script using it will immediately lose access. This action cannot be undone.
+    revokeConfirm: Revoke key
+
+artist:
+  error: Something went wrong loading this artist.
+  albumCount_one: "{{count}} album"
+  albumCount_other: "{{count}} albums"
+  playPopular: Play popular
+  shuffleAll: Shuffle all
+  topSongs: Top songs
+  playSong: "Play {{title}}"
+  playAlbum: "Play {{title}}"
+  albums: Albums
+  eps: EPs
+  singles: Singles
+

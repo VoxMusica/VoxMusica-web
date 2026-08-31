@@ -1,0 +1,95 @@
+bootstrap:
+  loading: Chargement
+  error: On dirait qu'un bug s'est glissé dans le serveur. On s'en occupe.
+
+common:
+  optional: optionnel
+  create: Créer
+  cancel: Annuler
+
+setup:
+  welcome:
+    title: 'Bienvenue sur VoxMusica'
+    description: Configurons votre serveur — cela ne prendra que quelques étapes rapides.
+  done: 'Configuration terminée'
+  adminAccount:
+    heading: Créez votre compte administrateur
+    subtitle: Ce compte aura un accès complet à la gestion de votre serveur.
+    confirmPassword: Confirmez votre mot de passe
+    errors:
+      usernameMin: Le nom d'utilisateur doit comporter au moins 3 caractères
+      passwordMin: Le mot de passe doit comporter au moins 12 caractères
+      passwordMismatch: Les mots de passe ne correspondent pas
+
+user:
+  username: Nom d'utilisateur
+  password: Mot de passe
+
+auth:
+  login:
+    heading: Connexion
+    validate: Connexion
+
+
+ui:
+  previous: Précédent
+  next: Suivant
+
+password:
+  strength:
+    weak: Faible
+    fair: Moyen
+    good: Bon
+    strong: Fort
+
+library:
+  sidebar:
+    title: Album
+    artists: Artists
+    artists-recent: Ajoutés récemment
+    artists-popular: Populaires
+    artists-most-listened: Les plus écoutés
+    artists-with-new-release: Nouvelles sorties
+    albums: Albums
+    tracks: Pistes
+    genres: Genres
+    playlists: Playlists
+  getTopSongs:
+    validation:
+      artistOrIdRequired: Nom ou id d'artiste requis
+
+user-settings:
+  sidebar:
+    title: Préférences
+    user: Préférences générales
+    security: Sécurité
+  api-keys:
+    title: Clés d'API
+    new: nouvelle clé d'API
+    description: Consultez, revoquez ou ajouté des clés d'API
+    label: Nom
+    labelPlaceholder: e.g. Ma super appli audio
+    createdAt: Crée le
+    expiresAt: Expire le
+    expiresAtMissing: N'expire jamais
+    lastUsedAt: Dernier usage le
+    lastUsedAtMissing: Jamais utilisé
+    createError: Error lors de la création de votre clé d'api, merci de contacter l'administrateur de l'application
+    copyWarning: Assurez-vous de copier cette clé maintenant, vous ne pourrez plus la revoir par la suite.
+    revoke: Révoquer
+    revokeTitle: Révoquer cette clé API ?
+    revokeDescription: Cette action révoquera définitivement la clé « {{label}} ». Toute application ou script l'utilisant perdra immédiatement l'accès. Cette action est irréversible.
+    revokeConfirm: Révoquer la clé
+
+artist:
+  error: Une erreur est survenue lors du chargement de cet artiste.
+  albumCount_one: "{{count}} album"
+  albumCount_other: "{{count}} albums"
+  playPopular: Lire les titres populaires
+  shuffleAll: Tout lire aléatoirement
+  topSongs: Titres populaires
+  playSong: "Lire {{title}}"
+  playAlbum: "Lire {{title}}"
+  albums: Albums
+  eps: EPs
+  singles: Singles
