@@ -7,6 +7,16 @@ declare module '@fastify/jwt' {
   }
 }
 
+declare module '@fastify/caching' {
+  interface AbstractCacheCompliantObject {
+    delete(key: string | { id: string; segment: string }): Promise<void>
+    delete(
+      key: string | { id: string; segment: string },
+      callback: (error: unknown) => void
+    ): void
+  }
+}
+
 declare module 'fastify' {
   interface FastifyRequest {
     subsonicUser?: User,

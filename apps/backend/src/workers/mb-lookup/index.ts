@@ -1,6 +1,7 @@
 import { Worker, type WorkerOptions } from "bullmq"
 
 import { MUSICBRAINZ_LOOKUP_QUEUE } from "#workers/queues"
+import { lookAlbumCover } from "./album-cover.ts"
 import { lookArtistCover } from "./artist-cover.ts"
 
 import type { Logger } from "pino"
@@ -15,6 +16,8 @@ export const spawnMusicbrainLookupWorker = (logger: Logger, baseOptions: WorkerO
       switch (job.name) {
         case 'artist-cover':
           return lookArtistCover(job.data.artistId, logger)
+        case 'album-cover':
+          return lookAlbumCover(job.data.albumId, logger)
         default:
           throw new Error(`Unknown job type: ${job.name}`)
       }

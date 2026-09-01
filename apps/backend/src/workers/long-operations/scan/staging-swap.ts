@@ -2,7 +2,18 @@ import { sql } from 'drizzle-orm'
 
 import { db } from '#db/index'
 
+
 const TABLES = ['tracks', 'albums', 'artists', ] as const
+
+
+export const cleanStagingTables = async () => {
+  await db.transaction(async (tx) => {
+    for (const table of TABLES) {
+      await tx.run(sql.raw(`DELETE FROM ${table}Staging`))
+    }
+  })
+}
+
 export const swapStagingIntoMain = async () => {
   await db.transaction(async (tx) => {
     for (const table of TABLES) {

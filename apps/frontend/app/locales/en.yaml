@@ -6,6 +6,7 @@ common:
   optional: optional
   create: Create
   cancel: Cancel
+  playTrack: "Play {{title}}"
 
 setup:
   welcome:
@@ -98,3 +99,9 @@ artist:
   eps: EPs
   singles: Singles
 
+album:
+  error: Something went wrong loading this album.
+  songCount_one: "{{count}} song"
+  songCount_other: "{{count}} songs"
+  play: Play
+  shuffle: Shuffle

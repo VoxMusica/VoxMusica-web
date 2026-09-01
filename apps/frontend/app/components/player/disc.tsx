@@ -1,7 +1,5 @@
 import { MORPH } from '@/style/transitions'
 
-import type { CSSProperties } from 'react'
-
 interface DiscParams {
   playing: boolean
   expanded: boolean
@@ -9,7 +7,7 @@ interface DiscParams {
 }
 
 export const Disc = ({ playing, expanded, hue } : DiscParams) => {
-  const style: CSSProperties = {
+  const style: React.CSSProperties = {
     position: 'absolute',
     transition: MORPH,
     pointerEvents: 'none',

@@ -4,16 +4,18 @@ import type { ArtistWithAlbumsID3, GetArtistResponse, GetArtistsResponse, IndexA
 
 import { subsonicFetch } from '@/lib/subsonic-client'
 
-const GET_ALL_CACHE_KEY = 'get-artists'
-const GET_ONE_CACHE_KEY = 'get-artist'
-
 interface WithName{
   name: string
 }
 const sortName = (a: WithName, b :WithName) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
 
+export const artistKeys = {
+  all: ['artists'] as const,
+  detail: (artistId: string) => ['artists', artistId] as const,
+}
+
 export const useAllArtists = () => useQuery<unknown, Error, IndexArtist[]>({
-  queryKey: [GET_ALL_CACHE_KEY],
+  queryKey: artistKeys.all,
   queryFn: () => subsonicFetch<GetArtistsResponse>('getArtists')
     .then(v => v.artists?.index)
     .then(v => v
@@ -25,9 +27,11 @@ export const useAllArtists = () => useQuery<unknown, Error, IndexArtist[]>({
     )
 })
 
+
+
 export const useArtist = (artistId?: string) =>
   useQuery<unknown, Error, ArtistWithAlbumsID3>({
-    queryKey: [GET_ONE_CACHE_KEY, artistId],
+    queryKey: artistKeys.detail(artistId ?? ''),
     queryFn: () => subsonicFetch<GetArtistResponse>('getArtist', { id: artistId! })
       .then(v => v.artist),
     enabled: !!artistId

@@ -10,4 +10,5 @@ export const apiClient = {
     return response.album
   },
   scrobble: (params: { id: string; submission?: boolean }) => subsonicFetch<void>('scrobble', params),
+  setRating: (params: { id: string; rating: number }) => subsonicFetch<void>('setRating', params),
 }

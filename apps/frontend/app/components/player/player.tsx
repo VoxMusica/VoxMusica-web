@@ -5,6 +5,7 @@ import Disc from './disc'
 import PlayerProgress from './progress'
 import { TrackInfo } from './track-info'
 
+import { getCoverArtUrl } from '@/lib/subsonic-client'
 import { usePlayerStore } from '@/store/player.store'
 import { MORPH } from '@/style/transitions'
 
@@ -19,7 +20,8 @@ const NOW_PLAYING = {
 }
 
 export const Player = () => {  
-  const { expanded, playing, togglePlay, setExpanded, currentTime, duration, currentSong } = usePlayerStore()
+  const { expanded, playing, togglePlay, setExpanded, currentTime, duration, currentSong, next, previous} = usePlayerStore()
+
 
 return currentSong ? <div
     className={`fixed z-30 overflow-hidden shadow-2xl backdrop-blur-md border ${
@@ -60,9 +62,27 @@ return currentSong ? <div
         <PlayerProgress elapsed={currentTime} duration={duration} showLabels={expanded}/>
       </div>
 
-      <Disc playing={playing} expanded={expanded} hue={NOW_PLAYING.hue} />
+      {
+        currentSong?.coverArt ? <img
+          src={getCoverArtUrl(currentSong.coverArt)}
+          alt={currentSong.album}
+          className={`absolute object-cover pointer-events-none rounded-full
+          ${expanded ? 'w-64 h-64 left-1/2' : 'w-10 h-10 left-4 bottom-4' }
+          ${playing ? 'disc-spin' : 'disc-paused'}
+          `
+        }
+          style={expanded ? { top: '30%', transform: 'translate(-50%, -50%)'} : {}}
+        /> :
+        <Disc playing={playing} expanded={expanded} hue={NOW_PLAYING.hue} />
+      }
       <TrackInfo title={currentSong.title} artist={currentSong.artist} album={currentSong.album} expanded={expanded} />
-      <PlayerControls playing={playing} expanded={expanded} onTogglePlay={() => togglePlay()} />
+      <PlayerControls
+        playing={playing}
+        expanded={expanded}
+        onTogglePlay={() => togglePlay()}
+        onPrevious={() => previous()}
+        onNext={() => next()}
+         />
   </div> : <></>
 }
 

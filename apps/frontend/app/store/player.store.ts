@@ -1,4 +1,6 @@
 // apps/frontend/app/store/player.store.ts
+import { createComputed } from 'zustand-computed'
+
 import { createStore } from '.'
 
 import type { Child } from '@voxmusica/types'
@@ -8,7 +10,7 @@ import { getStreamUrl } from '@/lib/subsonic-client'
 
 export type RepeatMode = 'off' | 'all' | 'one'
 
-export interface PlayerStore {
+interface PlayerStoreBase {
   expanded: boolean
   playing: boolean
   queue: Child[]
@@ -18,9 +20,10 @@ export interface PlayerStore {
   volume: number,
   currentTime: number
   duration: number,
-  currentSong: Child| null,
 
   setExpanded: (value: boolean) => void
+  setPlaying: (value: boolean) => void
+
   playTracks: (tracks: Child[], options?: { shuffle?: boolean; startIndex?: number }) => void
   playAlbum: (albumId: string, tracks: Child[]) => void
   togglePlay: () => void
@@ -32,6 +35,14 @@ export interface PlayerStore {
   seek: (time: number) => void
   enqueue: (tracks: Child[]) => void,
 }
+
+interface PlayerStoreComputed {
+  progress: number
+  currentSong: Child| null
+  hasNext: boolean
+}
+
+export type PlayerStore = PlayerStoreBase & PlayerStoreComputed
 
 const secureRandomInt = (max: number): number => {
   if (typeof globalThis.crypto !== 'undefined' && 'getRandomValues' in globalThis.crypto) {
@@ -65,7 +76,13 @@ const loadTrack = (track: Child) => {
   scrobbledTrackId = null
 }
 
-export const usePlayerStore = createStore<PlayerStore>((set, get) => {
+const computed = createComputed<PlayerStoreBase, PlayerStoreComputed>((state) => ({
+  progress: state.duration > 0 ? (state.currentTime / state.duration) * 100 : 0,
+  currentSong: state.queue?.[state.currentIndex ?? 0] ?? null,
+  hasNext: state.queue && state.currentIndex < state.queue.length - 1,
+}))
+
+export const usePlayerStore = createStore(computed((set, get) => {
   if(isClient){
     audio.addEventListener('ended', () => {
       get().next()
@@ -98,7 +115,6 @@ export const usePlayerStore = createStore<PlayerStore>((set, get) => {
     volume: 1,
     currentTime: -1,
     duration: -1,
-    currentSong: null,
 
     setExpanded: (value) => set({ expanded: value }),
     setPlaying: (value: boolean) => set({ playing: value }),
@@ -115,7 +131,6 @@ export const usePlayerStore = createStore<PlayerStore>((set, get) => {
         shuffle: options?.shuffle ?? false,
         currentTime: 0,
         duration: 0,
-        currentSong: ordered.at(startIndex),
       })
     },
 
@@ -149,7 +164,6 @@ export const usePlayerStore = createStore<PlayerStore>((set, get) => {
       set({
           currentIndex: nextIndex,
           playing: true,
-          currentSong: queue.at(nextIndex),
       })
     },
 
@@ -162,7 +176,6 @@ export const usePlayerStore = createStore<PlayerStore>((set, get) => {
       set({
         currentIndex: prevIndex,
         playing: true,
-        currentSong: queue.at(prevIndex),
       })
     },
 
@@ -198,4 +211,4 @@ export const usePlayerStore = createStore<PlayerStore>((set, get) => {
 
     enqueue: (tracks) => set((state) => ({ queue: [...state.queue, ...tracks] })),
   }
-})
+}))

@@ -2,12 +2,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Play } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 import type { AlbumID3, Child } from '@voxmusica/types'
 
 import { Button } from '@/components/ui/button'
 import { apiClient } from '@/lib/open-subsonic.api-client'
-
+import { getCoverArtUrl } from '@/lib/subsonic-client'
 
 const ReleaseSection = ({
   title,
@@ -25,7 +26,7 @@ const ReleaseSection = ({
   const handlePlay = async (albumId: string) => {
     setLoadingAlbumId(albumId)
     try {
-      const album = await queryClient.fetchQuery({
+      const album = await queryClient.query({
         queryKey: ['album', albumId],
         queryFn: () => apiClient.getAlbum(albumId),
       })
@@ -38,25 +39,27 @@ const ReleaseSection = ({
   return (
     <section className="flex flex-col gap-3">
       <h2 className="text-xl font-semibold">{title}</h2>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
         {releases.map((release) => (
           <div key={release.id} className="group relative flex flex-col gap-2">
             <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
               {release.coverArt != null && (
-                <img
-                  src={`/api/cover/${release.coverArt}`}
-                  alt={release.name}
-                  className="h-full w-full object-cover"
-                />
+                <Link to={`/albums/${release.id}`} className="absolute inset-0">
+                  <img
+                    src={getCoverArtUrl(release.coverArt)}
+                    alt={release.name}
+                    className="h-full w-full object-cover"
+                  />
+                </Link>
               )}
               <Button
                 size="icon"
-                className="absolute right-2 bottom-2 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+                className="absolute right-2 bottom-2 opacity-0 shadow-md transition-opacity group-hover:opacity-100  cursor-pointer"
                 onClick={() => handlePlay(release.id)}
                 disabled={loadingAlbumId === release.id}
                 aria-label={t('artist.playAlbum', { title: release.name })}
               >
-                <Play className="h-4 w-4" />
+                <Play className="h-4 w-4 " />
               </Button>
             </div>
             <div>

@@ -6,7 +6,6 @@ import pino from 'pino'
 import config from '#config'
 import logger from '#logger'
 import { redis } from '#redis'
-import { spawnCoverArtWorker } from '#workers/cover-art/index'
 import { spawnLongOperationWorker } from '#workers/long-operations/index'
 import { spawnMusicbrainLookupWorker } from '#workers/mb-lookup/index'
 import { spawnSchedulerWorker } from '#workers/scheduler/index'
@@ -24,5 +23,4 @@ const baseOptions: WorkerOptions = {
 
 spawnLongOperationWorker(workerLogger, baseOptions)
 spawnMusicbrainLookupWorker(workerLogger, baseOptions)
-spawnCoverArtWorker(workerLogger, baseOptions)
 spawnSchedulerWorker(workerLogger, baseOptions)

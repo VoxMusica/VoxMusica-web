@@ -15,4 +15,3 @@ export type AlbumID3WithSongs = z.infer<typeof albumID3WithSongsSchema>
 export interface GetAlbumReply extends OpensubsonicResponse {
   album: AlbumID3WithSongs
 }
-

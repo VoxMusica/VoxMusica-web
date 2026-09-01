@@ -6,10 +6,16 @@ const MORPH = 'all 480ms cubic-bezier(0.32, 0.72, 0, 1)'
 interface PlayerControlsParams {
   playing: boolean
   expanded: boolean
-  onTogglePlay: () => void
+  onTogglePlay: () => void,
+  onPrevious?: () => void,
+  onNext?: () => void,
+  onVolumeChange?: (volume: number) => void
 }
 
-export const PlayerControls = ({ playing, expanded, onTogglePlay }: PlayerControlsParams) => {
+export const PlayerControls = ({
+  playing, expanded, onTogglePlay,
+  onPrevious, onNext, onVolumeChange
+}: PlayerControlsParams) => {
   const onPlay: MouseEventHandler = (event) => {
     event.stopPropagation()
     onTogglePlay()
@@ -25,23 +31,23 @@ export const PlayerControls = ({ playing, expanded, onTogglePlay }: PlayerContro
           ? { top: '86%', left: '50%', transform: 'translate(-50%, -50%)', gap: 24 }
           : { top: 35, right: 14, gap: 6, transform: 'translateY(-50%)' })
       }}>
-      <button type="button" className="text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full" style={{ transition: MORPH }} aria-label="Previous"
-        onClick={(e) => e.stopPropagation()}>
+      <button type="button" className="text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full cursor-pointer" style={{ transition: MORPH }} aria-label="Previous"
+        onClick={(e) => { e.stopPropagation(); onPrevious?.() }}>
         <SkipBack size={expanded ? 20 : 14} fill="currentColor" />
       </button>
 
       <button
         type="button"
         onClick={onPlay}
-        className="rounded-full flex items-center justify-center bg-primary text-primary-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+        className="rounded-full flex items-center justify-center bg-primary text-primary-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all cursor-pointer"
         style={{ transitionDuration: '480ms', width: expanded ? 56 : 36, height: expanded ? 56 : 36 }}
         aria-label={playing ? 'Pause' : 'Play'}
       >
         {playing ? <Pause size={expanded ? 22 : 16} fill="currentColor" /> : <Play size={expanded ? 22 : 16} fill="currentColor" />}
       </button>
 
-      <button type="button" className="text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full" style={{ transition: MORPH }} aria-label="Next"
-        onClick={(e) => e.stopPropagation()}>
+      <button type="button" className="text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full cursor-pointer" style={{ transition: MORPH }} aria-label="Next"
+        onClick={(e) => { e.stopPropagation(); onNext?.() }}>
         <SkipForward size={expanded ? 20 : 14} fill="currentColor" />
       </button>
 

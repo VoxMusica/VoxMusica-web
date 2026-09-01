@@ -2,10 +2,11 @@ import { Disc3, Flame, Headphones, ListMusic, Mic, Sparkle, Sparkles, Tags } fro
 import { useTranslation } from 'react-i18next'
 import { Outlet, useNavigate } from 'react-router'
 
+import type { SidebarItem } from '@/components/sidebar/item'
+
 import { Sidebar } from '@/components/sidebar/sidebar'
 import { cn } from '@/lib/utils'
 
-import type { SidebarItem } from '@/components/sidebar/item'
 
 const NewReleaseIcon = ({ className }: { className?: string }) => (
   <div className={cn('relative inline-flex', className)}>
@@ -38,7 +39,7 @@ const PlayerLayout = () => {
 
   return <>
     <Sidebar items={NAV_ITEMS} title={title} />
-    <main>
+    <main class="w-full h-full overflow-y-auto">
       <Outlet />
     </main>
   </>

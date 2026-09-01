@@ -34,3 +34,13 @@ export const getStreamUrl = (trackId: string, options?: { maxBitRate?: number; f
 
   return `/rest/stream?${params.toString()}`
 }
+
+export const getCoverArtUrl = (coverArtId: string): string => {
+  const params = new URLSearchParams({
+    id: coverArtId,
+    v: API_VERSION,
+    c: CLIENT_NAME,
+  })
+
+  return `/rest/getCoverArt?${params.toString()}`
+}

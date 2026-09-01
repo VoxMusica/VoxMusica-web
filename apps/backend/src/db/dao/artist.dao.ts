@@ -1,7 +1,7 @@
 import { and, count, desc, eq, getTableColumns, max, sql, sum } from "drizzle-orm"
 
 import { db } from "#db/index"
-import { albums, artistMusicbrainz, artists, favorites, playEvents, ratings, tracks, type AlbumWithExtraData, type ArtistWithExtraData } from "#db/schema"
+import { albums, artistMusicbrainz, artists, favorites, playEvents, ratings, tracks, type AlbumWithExtraData } from "#db/schema"
 
 type Artist = typeof artists.$inferSelect
 type ArtistMusicbrainz = typeof artistMusicbrainz.$inferSelect
@@ -50,8 +50,8 @@ export const getArtistWithExtraInfoForUser = (artistId: string, userId: string) 
   .from(artists)
   .where(eq(artists.id, artistId))
   .leftJoin(albums, eq(albums.artistId, artists.id))
-  .leftJoin(ratings, and(eq(ratings.userId, userId), eq(ratings.itemType, 'album'), eq(ratings.itemId, albums.id)))
-  .leftJoin(favorites, and(eq(favorites.userId, userId), eq(favorites.itemType, 'album'), eq(favorites.itemId, albums.id)))
+  .leftJoin(ratings, and(eq(ratings.userId, userId), eq(ratings.itemType, 'artist'), eq(ratings.itemId, artists.id)))
+  .leftJoin(favorites, and(eq(favorites.userId, userId), eq(favorites.itemType, 'artist'), eq(favorites.itemId, artists.id)))
   .groupBy(artists.id)
   .then(r => r.at(0))
 

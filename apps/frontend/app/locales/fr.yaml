@@ -6,6 +6,7 @@ common:
   optional: optionnel
   create: Créer
   cancel: Annuler
+  playTrack: "Lire {{title}}"
 
 setup:
   welcome:
@@ -93,3 +94,10 @@ artist:
   albums: Albums
   eps: EPs
   singles: Singles
+
+album:
+  error: Une erreur est survenue lors du chargement de cet album.
+  songCount_one: "{{count}} titre"
+  songCount_other: "{{count}} titres"
+  play: Lire
+  shuffle: Aléatoire

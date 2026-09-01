@@ -25,3 +25,16 @@ export const findArtistImage = async (artistId: string) => {
   }
   return null
 }
+
+export const findAlbumImage = async (albumId: string) => {
+  for (const ext of SUPPORTED_EXTENSIONS) {
+    const filePath = path.join(config.get('data.dir'), 'albums', `${albumId}.${ext}`)
+    try {
+      await access(filePath, constants.F_OK)
+      return { filePath, extension: ext }
+    } catch {
+      // doesn't exist with this extension, try next
+    }
+  }
+  return null
+}

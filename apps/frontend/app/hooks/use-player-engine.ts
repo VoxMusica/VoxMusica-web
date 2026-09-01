@@ -21,7 +21,7 @@ export const usePlayerEngine = () => {
     audio.src = getStreamUrl(currentTrack.id)
     scrobbledRef.current = null
     if (playing) audio.play().catch(() => {})
-  }, [currentTrack?.id])
+  }, [currentTrack, currentTrack.id, playing])
 
   useEffect(() => {
     const audio = audioRef.current

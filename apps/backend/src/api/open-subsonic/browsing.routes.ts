@@ -1,4 +1,5 @@
 import config from "#config"
+import { getAlbumHandler } from "./browsing/get-album.handler.ts"
 import { getArtistHandler } from "./browsing/get-artist.handler.ts"
 import { getArtistsHandler } from "./browsing/get-artists.handler.ts"
 import { getIndexesHandler } from "./browsing/get-indexes.handler.ts"
@@ -18,6 +19,7 @@ export const browsingRoutes: FastifyPluginAsync = async (app: FastifyInstance) =
       }
     })
   })
+  app.register(getAlbumHandler)
   app.register(getArtistHandler)
   app.register(getArtistsHandler)
   app.register(getIndexesHandler)
