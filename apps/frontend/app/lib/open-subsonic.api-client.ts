@@ -1,6 +1,6 @@
 import { subsonicFetch } from './subsonic-client'
 
-import type { AlbumID3WithSongs, GetAlbumReply, GetArtistResponse, GetTopSongsReply } from '@voxmusica/types'
+import type { AlbumID3WithSongs, GetAlbumReply, GetArtistResponse, GetTopSongsReply, SetRatingParams, StarParams } from '@voxmusica/types'
 
 export const apiClient = {
   getArtist: (id: string) => subsonicFetch<GetArtistResponse>('getArtist', { id }),
@@ -10,5 +10,7 @@ export const apiClient = {
     return response.album
   },
   scrobble: (params: { id: string; submission?: boolean }) => subsonicFetch<void>('scrobble', params),
-  setRating: (params: { id: string; rating: number }) => subsonicFetch<void>('setRating', params),
+  setRating: (params: SetRatingParams) => subsonicFetch<void>('setRating', params),
+  setFav: (params: StarParams) => subsonicFetch<void>('star', params),
+  unFav: (params: StarParams) => subsonicFetch<void>('unstar', params),
 }

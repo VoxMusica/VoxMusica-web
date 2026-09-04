@@ -5,6 +5,7 @@ import { createStore } from '.'
 
 import type { Child } from '@voxmusica/types'
 
+import { getAudio } from '@/lib/audio'
 import { apiClient } from '@/lib/open-subsonic.api-client'
 import { getStreamUrl } from '@/lib/subsonic-client'
 
@@ -65,7 +66,7 @@ const shuffleArray = <T,>(items: T[]): T[] => {
 
 // module-level singleton — one real <audio> element for the app's lifetime
 const isClient = typeof window !== 'undefined'
-const audio = isClient ? new Audio() : (null as unknown as HTMLAudioElement)
+const audio = getAudio()
 
 let scrobbledTrackId: string | null = null
 

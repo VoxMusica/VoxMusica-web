@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm"
 
 import { db } from "#db/index"
-import { albums, artists, ratings, tracks } from "#db/schema"
+import { albums, artists, favorites, ratings, tracks } from "#db/schema"
 
 type ItemType = 'artist' | 'album' | 'track'
 
@@ -40,3 +40,25 @@ export const setRating = async (id: string, userId: string, rating: number): Pro
   return true
 }
 
+export const addStar = async (id: string, userId: string): Promise<boolean> => {
+  const itemType = await resolveItemType(id)
+  if (itemType == null) return false
+
+  await db
+    .insert(favorites)
+    .values({ userId, itemType, itemId: id, starredAt: new Date() })
+    .onConflictDoNothing()
+
+  return true
+}
+
+export const removeStar = async (id: string, userId: string): Promise<boolean> => {
+  const itemType = await resolveItemType(id)
+  if (itemType == null) return false
+
+  await db
+    .delete(favorites)
+    .where(and(eq(favorites.userId, userId), eq(favorites.itemType, itemType), eq(favorites.itemId, id)))
+
+  return true
+}

@@ -4,12 +4,13 @@ import { Link, useParams } from 'react-router'
 
 import type { Child } from '@voxmusica/types'
 
+import TrackList from '@/components/library/track-list'
 import Loading from '@/components/loading'
-import TrackList from '@/components/track-list'
 import { Button } from '@/components/ui/button'
 import { formatDuration } from '@/lib/format-duration'
 import { getCoverArtUrl } from '@/lib/subsonic-client'
 import { useAlbum } from '@/queries/library/albums.queries'
+import { useInvalidateTopSongsForTrack, useSetRatingMutation } from '@/queries/library/media-annotation.queries'
 import { usePlayerStore } from '@/store/player.store'
 
 
@@ -17,7 +18,9 @@ export const AlbumPage = () => {
   const { t } = useTranslation()
   const { albumId } = useParams<{ albumId: string }>()
   const { data: album, isLoading, isError } = useAlbum(albumId ?? '')
-  const { playTracks, togglePlay, currentSong } = usePlayerStore()
+  const { playTracks, togglePlay, currentSong, playing } = usePlayerStore()
+  const { mutateAsync: setRating } = useSetRatingMutation()
+  const invalidateTrack = useInvalidateTopSongsForTrack()
 
   if (isLoading) {
     return <Loading />
@@ -36,6 +39,13 @@ export const AlbumPage = () => {
 
   const shuffleAll = () => {
     playTracks(album.song, { shuffle: true })
+  }
+
+  const handleRateTrack = async (track: Child, rating: number) => {
+    if (track.id) {
+      await setRating({ id: track.id, rating })
+      invalidateTrack(track)
+    }
   }
 
   return (
@@ -74,11 +84,13 @@ export const AlbumPage = () => {
 
       <TrackList
         tracks={album.song}
+        currentSongId={currentSong?.id}
+        isPlaying={playing}
+        showIndex={true}
         onPlayTrack={handlePlayTrack}
         onPauseTrack={() => togglePlay()}
-        currentSongId={currentSong?.id}
-        showIndex={true}
-        />
+        onTrackRatingChange={handleRateTrack}
+      />
     </div>
   )
 }

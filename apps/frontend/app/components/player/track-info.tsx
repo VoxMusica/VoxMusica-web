@@ -18,15 +18,15 @@ export const TrackInfo = ({ title, artist, album, expanded }: TrackInfoParams) =
   else if(album){
     subtitle = album
   }
-  return <div style={{
-    position: 'absolute',
-    transition: MORPH,
-    pointerEvents: 'none',
-    textAlign: expanded ? 'center' : 'left',
-    ...(expanded
-      ? { top: '62%', left: '50%', width: '85%', transform: 'translate(-50%, -50%)' }
-      : { top: 35, left: 70, right: 120, transform: 'translateY(-50%)' })
-  }}>
+  return <div 
+    className={`
+      pointer-events-none text-foreground
+      ${expanded ? 'text-center' : 'text-left'}
+    `}
+  style={{
+    transition: MORPH
+  }}
+  >
     <div className="truncate font-display font-semibold text-foreground" style={{ transition: MORPH, fontSize: expanded ? '1.25rem' : '0.875rem' }}>
       {title}
     </div>

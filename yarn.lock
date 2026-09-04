@@ -2789,6 +2789,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.102.1"
     "@tanstack/react-query-devtools": "npm:^5.102.1"
     "@types/js-yaml": "npm:^4.0.9"
+    "@types/lodash-es": "npm:^4.17.12"
     "@types/luxon": "npm:^3"
     "@types/node": "npm:^22"
     "@types/react": "npm:^19.2.14"
@@ -2796,6 +2797,7 @@ __metadata:
     "@voxmusica/types": "workspace:*"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
+    cn: "npm:^0.2.5"
     date-fns: "npm:^4.4.0"
     eslint-import-resolver-typescript: "npm:^4.4.5"
     eslint-plugin-react: "npm:^7.37.5"
@@ -2806,8 +2808,10 @@ __metadata:
     isbot: "npm:^5.1.36"
     js-yaml: "npm:^5.3.0"
     jwt-decode: "npm:^4.0.0"
+    lodash-es: "npm:^4.18.1"
     lucide-react: "npm:^1.33.0"
     luxon: "npm:^3.7.2"
+    motion: "npm:^13.2.0"
     react: "npm:^19.2.7"
     react-day-picker: "npm:^10.0.1"
     react-dom: "npm:^19.2.7"
@@ -3488,6 +3492,15 @@ __metadata:
   version: 1.1.2
   resolution: "cluster-key-slot@npm:1.1.2"
   checksum: 10c0/d7d39ca28a8786e9e801eeb8c770e3c3236a566625d7299a47bb71113fb2298ce1039596acb82590e598c52dbc9b1f088c8f587803e697cb58e1867a95ff94d3
+  languageName: node
+  linkType: hard
+
+"cn@npm:^0.2.5":
+  version: 0.2.5
+  resolution: "cn@npm:0.2.5"
+  bin:
+    cn: bin/cn.mjs
+  checksum: 10c0/16d104653495f834a7aada7acb02714685bcebcf39d4038353e63c0222085ddfdabbb1c14080f227d2e86dca7e75bd79bf819375416649893d22d303b9d88684
   languageName: node
   linkType: hard
 
@@ -5361,6 +5374,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"framer-motion@npm:^13.2.0":
+  version: 13.2.0
+  resolution: "framer-motion@npm:13.2.0"
+  dependencies:
+    motion-dom: "npm:^13.2.0"
+    motion-utils: "npm:^13.0.0"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/b381cf2c6f9def6ae169c096f9f873b0dafc8343fbdc78cc3d27e3ede2e8f682b22e1160a1f8cde07f263993aecab2c94239a43702fe4f06eccaeba109fcff13
+  languageName: node
+  linkType: hard
+
 "fresh@npm:^2.0.0":
   version: 2.0.0
   resolution: "fresh@npm:2.0.0"
@@ -7171,10 +7203,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"motion-dom@npm:^13.2.0":
+  version: 13.2.0
+  resolution: "motion-dom@npm:13.2.0"
+  dependencies:
+    motion-utils: "npm:^13.0.0"
+  checksum: 10c0/009725cf822940fcd10e20492cfd0be50f11db9b5f1b374dd2fddbe2bc53db80c7f44d02c8bf68e2b9baaa8335aba45bd2a860176b3c23685ca8b59ca69db6b7
+  languageName: node
+  linkType: hard
+
 "motion-utils@npm:^13.0.0":
   version: 13.0.0
   resolution: "motion-utils@npm:13.0.0"
   checksum: 10c0/4b279ce85f71926d668ff5966feb898b174541d16952a61c7150982388553266602ecd2a76e057530076ff8f38d06672e585639ddc73c41dd1a67d04aaa3662d
+  languageName: node
+  linkType: hard
+
+"motion@npm:^13.2.0":
+  version: 13.2.0
+  resolution: "motion@npm:13.2.0"
+  dependencies:
+    framer-motion: "npm:^13.2.0"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/3943e36a0848f39a3633fb822bc2230966cf8e215fd243d0cd39a62b1799c89ca75fdc07f964b9633b962a3ace845525f4c4b2f63860a7268e9d13cc1667ad4a
   languageName: node
   linkType: hard
 
