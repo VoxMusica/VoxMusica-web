@@ -34,6 +34,7 @@ type Config = {
     listenbrainzUrl: string
   },
   cache: {
+    enabled: boolean,
     redis: {
       host: string,
       port: number,
@@ -50,6 +51,10 @@ type Config = {
       id: string
       secret: string
     }
+  },
+  acoustid: {
+    endpoint: string,
+    apiKey: string
   }
 }
 
@@ -153,6 +158,12 @@ const schema = convict<Config>({
     },
   },
   cache: {
+    enabled: {
+      doc: 'Enable cache',
+      format: Boolean,
+      default: true,
+      env: 'CACHE_ENABLED'
+    },
     redis: {
       host: {
         doc: 'Redis host',
@@ -199,6 +210,20 @@ const schema = convict<Config>({
         env: 'SPOTIFY_CLIENT_SECRET',
       },
     }
+  },
+  acoustid: {
+    endpoint: {
+      doc: 'Acoustid endpoint url',
+      format: String,
+      default: 'https://api.acoustid.org/v2/lookup',
+      env: 'ACOUSTID_ENDPOINT'
+    },
+    apiKey: {
+      doc: 'Acoustid api key',
+      format: String,
+      default: '',
+      env: 'ACOUSTID_API_KEY'
+    },
   }
 });
 

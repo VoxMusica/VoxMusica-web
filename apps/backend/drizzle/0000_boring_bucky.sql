@@ -18,7 +18,6 @@ CREATE TABLE `album_musicbrainz` (
 );
 --> statement-breakpoint
 CREATE INDEX `album_musicbrainz_musicbrainz_id_idx` ON `album_musicbrainz` (`musicbrainz_id`);--> statement-breakpoint
-CREATE INDEX `album_musicbrainz_album_id_idx` ON `album_musicbrainz` (`album_id`);--> statement-breakpoint
 CREATE TABLE `albums` (
 	`id` text PRIMARY KEY NOT NULL,
 	`title` text NOT NULL,
@@ -26,10 +25,12 @@ CREATE TABLE `albums` (
 	`cover_path` text,
 	`sort_title` text,
 	`music_brain_album_id` text,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
 	`artist_id` text NOT NULL,
 	FOREIGN KEY (`artist_id`) REFERENCES `artists`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE INDEX `albums_artist_id_idx` ON `albums` (`artist_id`);--> statement-breakpoint
 CREATE TABLE `albumsStaging` (
 	`id` text PRIMARY KEY NOT NULL,
 	`title` text NOT NULL,
@@ -37,6 +38,7 @@ CREATE TABLE `albumsStaging` (
 	`cover_path` text,
 	`sort_title` text,
 	`music_brain_album_id` text,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
 	`artist_id` text NOT NULL,
 	FOREIGN KEY (`artist_id`) REFERENCES `artistsStaging`(`id`) ON UPDATE no action ON DELETE no action
 );
@@ -51,19 +53,20 @@ CREATE TABLE `artist_musicbrainz` (
 );
 --> statement-breakpoint
 CREATE INDEX `artist_musicbrainz_musicbrainz_id_idx` ON `artist_musicbrainz` (`musicbrainz_id`);--> statement-breakpoint
-CREATE INDEX `artist_musicbrainz_artist_id_idx` ON `artist_musicbrainz` (`artist_id`);--> statement-breakpoint
 CREATE TABLE `artists` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`sort_name` text,
-	`music_brain_artist_id` text
+	`music_brain_artist_id` text,
+	`created_at` integer DEFAULT '"2026-09-18T14:19:23.733Z"' NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `artistsStaging` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`sort_name` text,
-	`music_brain_artist_id` text
+	`music_brain_artist_id` text,
+	`created_at` integer DEFAULT '"2026-09-18T14:19:23.733Z"' NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `favorites` (
@@ -93,10 +96,10 @@ CREATE TABLE `playlist_tracks` (
 	`playlist_id` text NOT NULL,
 	`track_id` text NOT NULL,
 	`position` integer NOT NULL,
-	FOREIGN KEY (`playlist_id`) REFERENCES `playlists`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`track_id`) REFERENCES `tracks`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`playlist_id`) REFERENCES `playlists`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE INDEX `playlist_tracks_playlist_id_position_idx` ON `playlist_tracks` (`playlist_id`,`position`);--> statement-breakpoint
 CREATE TABLE `playlists` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
@@ -105,6 +108,7 @@ CREATE TABLE `playlists` (
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE INDEX `playlists_user_id_idx` ON `playlists` (`user_id`);--> statement-breakpoint
 CREATE TABLE `ratings` (
 	`user_id` text NOT NULL,
 	`item_type` text NOT NULL,
@@ -112,6 +116,31 @@ CREATE TABLE `ratings` (
 	`rating` integer NOT NULL,
 	PRIMARY KEY(`user_id`, `item_type`, `item_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `track_duplicates` (
+	`id` text PRIMARY KEY NOT NULL,
+	`file_path` text NOT NULL,
+	`file_size` integer NOT NULL,
+	`file_modified_at` integer NOT NULL,
+	`codec` text,
+	`bitrate` integer,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`track_id` text NOT NULL,
+	FOREIGN KEY (`track_id`) REFERENCES `tracks`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE INDEX `track_duplicates_track_id_idx` ON `track_duplicates` (`track_id`);--> statement-breakpoint
+CREATE TABLE `trackDuplicatesStaging` (
+	`id` text PRIMARY KEY NOT NULL,
+	`file_path` text NOT NULL,
+	`file_size` integer NOT NULL,
+	`file_modified_at` integer NOT NULL,
+	`codec` text,
+	`bitrate` integer,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`track_id` text NOT NULL,
+	FOREIGN KEY (`track_id`) REFERENCES `tracksStaging`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `tracks` (
@@ -132,12 +161,16 @@ CREATE TABLE `tracks` (
 	`musicbrainz_track_id` text,
 	`play_count` integer DEFAULT 0 NOT NULL,
 	`last_played_at` integer,
+	`created_at` integer DEFAULT '"2026-09-18T14:19:23.734Z"' NOT NULL,
+	`fingerprint` text,
 	`artist_id` text NOT NULL,
 	`album_id` text NOT NULL,
 	FOREIGN KEY (`artist_id`) REFERENCES `artists`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`album_id`) REFERENCES `albums`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE INDEX `tracks_artist_id_idx` ON `tracks` (`artist_id`);--> statement-breakpoint
+CREATE INDEX `tracks_album_id_idx` ON `tracks` (`album_id`);--> statement-breakpoint
 CREATE TABLE `tracksStaging` (
 	`id` text PRIMARY KEY NOT NULL,
 	`title` text NOT NULL,
@@ -156,12 +189,45 @@ CREATE TABLE `tracksStaging` (
 	`musicbrainz_track_id` text,
 	`play_count` integer DEFAULT 0 NOT NULL,
 	`last_played_at` integer,
+	`created_at` integer DEFAULT '"2026-09-18T14:19:23.734Z"' NOT NULL,
+	`fingerprint` text,
 	`artist_id` text NOT NULL,
 	`album_id` text NOT NULL,
 	FOREIGN KEY (`artist_id`) REFERENCES `artistsStaging`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`album_id`) REFERENCES `albumsStaging`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE TABLE `artist_script_score_details` (
+	`id` text PRIMARY KEY NOT NULL,
+	`artist_id` text NOT NULL,
+	`item_type` text NOT NULL,
+	`item_id` text NOT NULL,
+	`title` text NOT NULL,
+	`japanese` real NOT NULL,
+	`chinese` real NOT NULL,
+	`korean` real NOT NULL
+);
+--> statement-breakpoint
+CREATE INDEX `artist_script_score_details_artist_id_idx` ON `artist_script_score_details` (`artist_id`);--> statement-breakpoint
+CREATE TABLE `artist_script_scores` (
+	`artist_id` text PRIMARY KEY NOT NULL,
+	`scores` text NOT NULL,
+	`computed_at` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `transliterations` (
+	`id` text PRIMARY KEY NOT NULL,
+	`item_type` text NOT NULL,
+	`item_id` text NOT NULL,
+	`script` text NOT NULL,
+	`original_text` text NOT NULL,
+	`source` text NOT NULL,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL
+);
+--> statement-breakpoint
+CREATE INDEX `transliterations_item_idx` ON `transliterations` (`item_type`,`item_id`);--> statement-breakpoint
+CREATE INDEX `transliterations_item_script_and_value` ON `transliterations` (`script`,`original_text`);--> statement-breakpoint
+CREATE UNIQUE INDEX `transliterations_item_script_unique` ON `transliterations` (`item_type`,`item_id`,`script`);--> statement-breakpoint
 CREATE TABLE `api_keys` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
@@ -177,6 +243,13 @@ CREATE TABLE `api_keys` (
 CREATE UNIQUE INDEX `api_keys_key_hash_unique` ON `api_keys` (`key_hash`);--> statement-breakpoint
 CREATE INDEX `api_keys_key_hash_idx` ON `api_keys` (`key_hash`);--> statement-breakpoint
 CREATE INDEX `api_keys_user_id_idx` ON `api_keys` (`user_id`);--> statement-breakpoint
+CREATE TABLE `user_preferences` (
+	`user_id` text PRIMARY KEY NOT NULL,
+	`script` text,
+	`theme_variant` text DEFAULT 'system' NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
 CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
 	`username` text NOT NULL,

@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 
+export const systemKeys = {
+  info: ['system', 'info'] as const
+}
+
 const fetchSystemInfo = async () => {
   const res = await fetch('/api/system/info')
   if (!res.ok) throw new Error('Failed to fetch system info')
@@ -7,7 +11,7 @@ const fetchSystemInfo = async () => {
 }
 
 export const useSystemInfo = () => useQuery({
-  queryKey: ['system', 'info'],
+  queryKey: systemKeys.info,
   queryFn: fetchSystemInfo,
   staleTime: (query) => (query.state.data?.initialized ? Infinity : 0)
 })

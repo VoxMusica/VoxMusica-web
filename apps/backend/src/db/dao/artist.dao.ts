@@ -1,7 +1,10 @@
 import { and, count, desc, eq, getTableColumns, max, sql, sum } from "drizzle-orm"
 
+import { albumTransliterations, artistTransliterations, trackTransliterations } from '#db/aliases/scripts'
 import { db } from "#db/index"
-import { albums, artistMusicbrainz, artists, favorites, playEvents, ratings, tracks, type AlbumWithExtraData } from "#db/schema"
+import { albums, artistMusicbrainz, artists, favorites, playEvents, ratings, tracks, transliterations, userPreferences, type AlbumWithExtraData } from "#db/schema"
+
+import type { SCRIPTS } from "@voxmusica/types"
 
 type Artist = typeof artists.$inferSelect
 type ArtistMusicbrainz = typeof artistMusicbrainz.$inferSelect
@@ -14,14 +17,24 @@ type ArtistWithMBStatus = {
 
 export const getAllArtists = async () =>
   db.select().from(artists)
-export const getAllArtistsWithAlbumCount = async () =>
+export const getAllArtistsWithAlbumCount = async (userId: string) =>
   db.select({
     ...getTableColumns(artists),
-    albumCount: count(albums.id)
+    name: sql<string>`coalesce(${artistTransliterations.value}, ${artists.name})`,
+    albumCount: count(albums.id),
   })
-  .from(artists)
-  .leftJoin(albums, eq(albums.artistId, artists.id))
-  .groupBy(artists.id)
+    .from(artists)
+    .leftJoin(albums, eq(albums.artistId, artists.id))
+    .leftJoin(userPreferences, eq(userPreferences.userId, userId))
+    .leftJoin(
+      artistTransliterations,
+      and(
+        eq(artistTransliterations.itemType, 'artist'),
+        eq(artistTransliterations.itemId, artists.id),
+        eq(artistTransliterations.script, userPreferences.script)
+      )
+    )
+    .groupBy(artists.id)
 
 type GetArtist = {
   (id: string, withMBStatus: true): Promise<ArtistWithMBStatus | undefined>
@@ -43,6 +56,7 @@ export const getArtist: GetArtist = (async (id: string, withMBStatus: boolean = 
  */
 export const getArtistWithExtraInfoForUser = (artistId: string, userId: string) => db.select({
     ...getTableColumns(artists),
+    name: sql<string>`coalesce(${transliterations.value}, ${artists.name})`,
     albumCount: count(albums.id),
     userRating: ratings.rating,
     starred: favorites.starredAt,
@@ -52,6 +66,15 @@ export const getArtistWithExtraInfoForUser = (artistId: string, userId: string) 
   .leftJoin(albums, eq(albums.artistId, artists.id))
   .leftJoin(ratings, and(eq(ratings.userId, userId), eq(ratings.itemType, 'artist'), eq(ratings.itemId, artists.id)))
   .leftJoin(favorites, and(eq(favorites.userId, userId), eq(favorites.itemType, 'artist'), eq(favorites.itemId, artists.id)))
+  .leftJoin(userPreferences, eq(userPreferences.userId, userId))
+  .leftJoin(
+    transliterations,
+    and(
+      eq(transliterations.itemType, 'artist'),
+      eq(transliterations.itemId, artists.id),
+      eq(transliterations.script, userPreferences.script)
+    )
+  )
   .groupBy(artists.id)
   .then(r => r.at(0))
 
@@ -73,42 +96,51 @@ export const updateArtistMusicbrainzLastFailedAttempt = (artistId: string) =>
     })
 
 export const getArtistAlbumsWithExtraDataForUser = async (artistId: string, userId: string): Promise<AlbumWithExtraData[]> => db
-    .select({
-      id: albums.id,
-      title: albums.title,
-      year: albums.year,
-      coverPath: albums.coverPath,
-      sortTitle: albums.sortTitle,
-      songCount: count(tracks.id),
-      duration: sum(tracks.duration).mapWith(Number),
-      userRating: ratings.rating,
-      played: max(tracks.lastPlayedAt),
-      starred: favorites.starredAt,
-      artistId: albums.artistId,
-      playCount: sum(tracks.playCount).mapWith(Number),
-      createdAt: albums.createdAt,
-    })
-    .from(albums)
-    .leftJoin(tracks, eq(tracks.albumId, albums.id))
-    .leftJoin(
-      ratings,
-      and(
-        eq(ratings.itemId, albums.id),
-        eq(ratings.itemType, 'album'),
-        eq(ratings.userId, userId)
-      )
+  .select({
+    id: albums.id,
+    title: sql<string>`coalesce(${albumTransliterations.value}, ${albums.title})`,
+    year: albums.year,
+    coverPath: albums.coverPath,
+    sortTitle: albums.sortTitle,
+    songCount: count(tracks.id),
+    duration: sum(tracks.duration).mapWith(Number),
+    userRating: ratings.rating,
+    played: max(tracks.lastPlayedAt),
+    starred: favorites.starredAt,
+    artistId: albums.artistId,
+    playCount: sum(tracks.playCount).mapWith(Number),
+    createdAt: albums.createdAt,
+  })
+  .from(albums)
+  .leftJoin(tracks, eq(tracks.albumId, albums.id))
+  .leftJoin(
+    ratings,
+    and(
+      eq(ratings.itemId, albums.id),
+      eq(ratings.itemType, 'album'),
+      eq(ratings.userId, userId)
     )
-    .leftJoin(
-      favorites,
-      and(
-        eq(favorites.itemId, albums.id),
-        eq(favorites.itemType, 'album'),
-        eq(favorites.userId, userId)
-      )
+  )
+  .leftJoin(
+    favorites,
+    and(
+      eq(favorites.itemId, albums.id),
+      eq(favorites.itemType, 'album'),
+      eq(favorites.userId, userId)
     )
-    .where(eq(albums.artistId, artistId))
-    .groupBy(albums.id, ratings.rating, favorites.itemId)
-    .orderBy(sql`coalesce(${albums.sortTitle}, ${albums.title})`)
+  )
+  .leftJoin(userPreferences, eq(userPreferences.userId, userId))
+  .leftJoin(
+    albumTransliterations,
+    and(
+      eq(albumTransliterations.itemType, 'album'),
+      eq(albumTransliterations.itemId, albums.id),
+      eq(albumTransliterations.script, userPreferences.script)
+    )
+  )
+  .where(eq(albums.artistId, artistId))
+  .groupBy(albums.id, ratings.rating, favorites.itemId)
+  .orderBy(sql`coalesce(${albums.sortTitle}, ${albums.title})`)
 
 
 export interface GetArtistTopSongsParams{
@@ -117,10 +149,12 @@ export interface GetArtistTopSongsParams{
   userId: string,
   count?: number,
 }
+
+type transliterationType = { transliterations: Array<{script:  (typeof SCRIPTS)[number], value: string}>}
 export interface TopSongRow {
-  track: typeof tracks.$inferSelect
-  album: typeof albums.$inferSelect
-  artist: typeof artists.$inferSelect
+  track: typeof tracks.$inferSelect & transliterationType
+  album: typeof albums.$inferSelect & transliterationType
+  artist: typeof artists.$inferSelect & transliterationType
   userPlayCount: number | null
   userLastPlayedAt: Date | null
   starredAt: Date | null
@@ -136,23 +170,68 @@ export const getArtistTopSongs = async ({
   const artistMatch = type === 'id' ? eq(artists.id, id) : eq(artists.name, id)
 
   const userPlayStats = db.$with('user_play_stats').as(
-  db
-    .select({
-      trackId: playEvents.trackId,
-      userPlayCount: count(playEvents.id).as('user_play_count'),
-      userLastPlayedAt: max(playEvents.playedAt).as('user_last_played_at'),
-    })
-    .from(playEvents)
-    .where(and(eq(playEvents.userId, userId), eq(playEvents.counted, true)))
-    .groupBy(playEvents.trackId)
-)
+    db
+      .select({
+        trackId: playEvents.trackId,
+        userPlayCount: count(playEvents.id).as('user_play_count'),
+        userLastPlayedAt: max(playEvents.playedAt).as('user_last_played_at'),
+      })
+      .from(playEvents)
+      .where(and(eq(playEvents.userId, userId), eq(playEvents.counted, true)))
+      .groupBy(playEvents.trackId)
+  )
+
+  const trackTranslitAgg = db.$with('track_translit_agg').as(
+    db
+      .select({
+        itemId: trackTransliterations.itemId,
+        trackAll: sql<string>`json_group_array(json_object('script', ${trackTransliterations.script}, 'value', ${trackTransliterations.value}))`.as('trackAll'),
+      })
+      .from(trackTransliterations)
+      .where(eq(trackTransliterations.itemType, 'track'))
+      .groupBy(trackTransliterations.itemId)
+  )
+
+  const albumTranslitAgg = db.$with('album_translit_agg').as(
+    db
+      .select({
+        itemId: albumTransliterations.itemId,
+        albumAll: sql<string>`json_group_array(json_object('script', ${albumTransliterations.script}, 'value', ${albumTransliterations.value}))`.as('albumAll'),
+      })
+      .from(albumTransliterations)
+      .where(eq(albumTransliterations.itemType, 'album'))
+      .groupBy(albumTransliterations.itemId)
+  )
+
+  const artistTranslitAgg = db.$with('artist_translit_agg').as(
+    db
+      .select({
+        itemId: artistTransliterations.itemId,
+        artistAll: sql<string>`json_group_array(json_object('script', ${artistTransliterations.script}, 'value', ${artistTransliterations.value}))`.as('artistAll'),
+      })
+      .from(artistTransliterations)
+      .where(eq(artistTransliterations.itemType, 'artist'))
+      .groupBy(artistTransliterations.itemId)
+  )
 
   return db
-    .with(userPlayStats)
+    .with(userPlayStats, trackTranslitAgg, albumTranslitAgg, artistTranslitAgg)
     .select({
-      track: tracks,
-      album: albums,
-      artist: artists,
+      track: {
+        ...getTableColumns(tracks),
+        title: sql<string>`coalesce(${trackTransliterations.value}, ${tracks.title})`,
+        transliterations: sql<string>`coalesce(${trackTranslitAgg.trackAll}, '[]')`,
+      },
+      album: {
+        ...getTableColumns(albums),
+        title: sql<string>`coalesce(${albumTransliterations.value}, ${albums.title})`,
+        transliterations: sql<string>`coalesce(${albumTranslitAgg.albumAll}, '[]')`,
+      },
+      artist: {
+        ...getTableColumns(artists),
+        name: sql<string>`coalesce(${artistTransliterations.value}, ${artists.name})`,
+        transliterations: sql<string>`coalesce(${artistTranslitAgg.artistAll}, '[]')`,
+      },
       userPlayCount: userPlayStats.userPlayCount,
       userLastPlayedAt: userPlayStats.userLastPlayedAt,
       starredAt: favorites.starredAt,
@@ -178,8 +257,35 @@ export const getArtistTopSongs = async ({
         eq(ratings.userId, userId)
       )
     )
+    .leftJoin(userPreferences, eq(userPreferences.userId, userId))
+    .leftJoin(
+      trackTransliterations,
+      and(
+        eq(trackTransliterations.itemType, 'track'),
+        eq(trackTransliterations.itemId, tracks.id),
+        eq(trackTransliterations.script, userPreferences.script)
+      )
+    )
+    .leftJoin(
+      albumTransliterations,
+      and(
+        eq(albumTransliterations.itemType, 'album'),
+        eq(albumTransliterations.itemId, albums.id),
+        eq(albumTransliterations.script, userPreferences.script)
+      )
+    )
+    .leftJoin(
+      artistTransliterations,
+      and(
+        eq(artistTransliterations.itemType, 'artist'),
+        eq(artistTransliterations.itemId, artists.id),
+        eq(artistTransliterations.script, userPreferences.script)
+      )
+    )
+    .leftJoin(trackTranslitAgg, eq(trackTranslitAgg.itemId, tracks.id))
+    .leftJoin(albumTranslitAgg, eq(albumTranslitAgg.itemId, albums.id))
+    .leftJoin(artistTranslitAgg, eq(artistTranslitAgg.itemId, artists.id))
     .where(artistMatch)
     .orderBy(desc(tracks.playCount))
     .limit(limit)
 }
-

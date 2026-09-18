@@ -7,7 +7,7 @@ import { toCoverArtId } from "./cover-art.service.ts"
 import { formatOpenSubsonicData, replaceMusicFolderMarker, toRelativePath } from "./formating.service.ts"
 import { getAllArtistsByLetter } from "./index.service.ts"
 
-import type { AlbumID3, AlbumID3WithSongs, ArtistWithAlbumsID3, Child, GenericIndex, Index, IndexArtist, IndexID3 } from "@voxmusica/types"
+import type { AlbumID3, AlbumID3WithSongs, ArtistWithAlbumsID3, Child, ChildWithTransliterations, GenericIndex, Index, IndexArtist, IndexID3 } from "@voxmusica/types"
 
 const indexArtistMapper = async (artist: Artist): Promise<IndexArtist> =>  {
   const imagePath = await findArtistImage(artist.id)
@@ -60,8 +60,8 @@ const albumID3Mapper = (album: AlbumWithExtraData): AlbumID3 => {
   }
 }
 
-const getIndexForMapper = async <T extends IndexArtist>(mapper: (a: ArtistWithExtraData) => Promise<T>): Promise<Map<string, GenericIndex<T>>> => {
-  const allArtistsByLetter = await getAllArtistsByLetter()
+const getIndexForMapper = async <T extends IndexArtist>(userId: string, mapper: (a: ArtistWithExtraData) => Promise<T>): Promise<Map<string, GenericIndex<T>>> => {
+  const allArtistsByLetter = await getAllArtistsByLetter(userId)
   const result = new Map<string, GenericIndex<T>>()
   for(const [letter, artists] of allArtistsByLetter){
     const artist = await Promise.all(artists.map(mapper))
@@ -73,9 +73,9 @@ const getIndexForMapper = async <T extends IndexArtist>(mapper: (a: ArtistWithEx
    return result
 }
 
-export const getIndex = async (): Promise<Map<string, Index>> => getIndexForMapper(indexArtistMapper)
+export const getIndex = async (userId: string): Promise<Map<string, Index>> => getIndexForMapper(userId, indexArtistMapper)
 
-export const getIndexID3 = async (): Promise<Map<string, IndexID3>> => getIndexForMapper(indexID3ArtistMapper)
+export const getIndexID3 = async (userId: string): Promise<Map<string, IndexID3>> => getIndexForMapper(userId, indexID3ArtistMapper)
 
 export const getArtistID3 = async (artistId: string, userId: string): Promise<ArtistWithAlbumsID3 | undefined> => {
   if((artistId?.trim()?.length ?? 0) == 0){
@@ -85,7 +85,6 @@ export const getArtistID3 = async (artistId: string, userId: string): Promise<Ar
   if (!artist){
     return undefined
   }
-  console.log(artist)
   const artistAlbums = await getArtistAlbumsWithExtraDataForUser(artistId, userId)
   const mappedArtist = await indexID3ArtistMapper(artist)
   return {
@@ -94,7 +93,7 @@ export const getArtistID3 = async (artistId: string, userId: string): Promise<Ar
   }
 }
 
-const mapRowToChild = (row: TopSongRow): Child => ({
+const mapRowToChild = (row: TopSongRow): ChildWithTransliterations => ({
   id: row.track.id,
   isDir: false,
   title: row.track.title,
@@ -122,7 +121,13 @@ const mapRowToChild = (row: TopSongRow): Child => ({
   type: 'music',
   mediaType: 'song',
   coverArt: toCoverArtId('album', row.album.id),
+  transliterations: {
+    title: row.track.transliterations,
+    album: row.album.transliterations,
+    artist: row.artist.transliterations,
+  }
 })
+
 export interface GetArtistTopSongsParams{
   type: 'id' | 'name',
   id: string,
@@ -140,7 +145,7 @@ export const getAlbumID3 = async (albumId: string, userId: string): Promise<Albu
   if((albumId?.trim()?.length ?? 0) == 0){
     return undefined
   }
-  const albumRow = await getAlbum({ albumId })
+  const albumRow = await getAlbum({ albumId, userId })
   if (!albumRow){
     return undefined
   }

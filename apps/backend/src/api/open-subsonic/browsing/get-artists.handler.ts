@@ -21,7 +21,7 @@ export const getArtistsHandler: FastifyPluginAsync = async (app) => {
       if (cached?.item) {
         return subsonicOk(request.query, reply, cached.item)
       }
-      const index = await getIndexID3()
+      const index = await getIndexID3(request.subsonicUser.id)
 
       const result: GetArtistsResponseData = {
         artists: {

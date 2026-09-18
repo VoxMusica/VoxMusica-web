@@ -90,6 +90,7 @@ export const AlbumPage = () => {
         onPlayTrack={handlePlayTrack}
         onPauseTrack={() => togglePlay()}
         onTrackRatingChange={handleRateTrack}
+        maxHeight={0}
       />
     </div>
   )

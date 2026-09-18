@@ -1,7 +1,7 @@
-import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm"
+import { and, asc, count, eq, getTableColumns, max, sql } from "drizzle-orm"
 
 import { db } from "#db/index"
-import { favorites, playEvents, ratings, tracks } from "#db/schema"
+import { favorites, playEvents, ratings, tracks, transliterations, userPreferences } from "#db/schema"
 
 export interface GetAlbumTracksParams {
   albumId: string
@@ -24,6 +24,7 @@ export const getAlbumTracks = ({ albumId, userId }: GetAlbumTracksParams) => {
     .with(userPlayStats)
     .select({
       ...getTableColumns(tracks),
+      title: sql<string>`coalesce(${transliterations.value}, ${tracks.title})`,
       userPlayCount: userPlayStats.userPlayCount,
       userLastPlayedAt: userPlayStats.userLastPlayedAt,
       starredAt: favorites.starredAt,
@@ -47,6 +48,16 @@ export const getAlbumTracks = ({ albumId, userId }: GetAlbumTracksParams) => {
         eq(ratings.userId, userId)
       )
     )
+    .leftJoin(userPreferences, eq(userPreferences.userId, userId))
+    .leftJoin(
+      transliterations,
+      and(
+        eq(transliterations.itemType, 'track'),
+        eq(transliterations.itemId, tracks.id),
+        eq(transliterations.script, userPreferences.script)
+      )
+    )
     .where(eq(tracks.albumId, albumId))
     .orderBy(asc(tracks.discNumber), asc(tracks.trackNumber))
 }
+

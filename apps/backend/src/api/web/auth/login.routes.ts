@@ -4,7 +4,7 @@ import ms, { type StringValue } from 'ms'
 import config from '#config'
 import { createApiKey, removeApiKey } from '#services/api-keys/api-keys.service'
 import { parseRoles } from '#services/users/model/role'
-import { findUserByUsername, verifyPassword } from '#services/users/users.service'
+import { createUserPreferences, findUserByUsername, getUserPreferences, verifyPassword } from '#services/users/users.service'
 
 import type { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 
@@ -27,6 +27,12 @@ export const loginRoute: FastifyPluginAsync = async (app: FastifyInstance) => {
     if (!valid) {
       return reply.code(401).send({ error: 'Invalid credentials' });
     }
+
+    const preferences = await getUserPreferences(user.id)
+    if(preferences == null){
+      await createUserPreferences(user.id)
+    }
+
   
     const tokenExpiry = config.get('auth.tokenExpiry') as StringValue
     const expiresAt = new Date(Date.now() + ms(tokenExpiry))

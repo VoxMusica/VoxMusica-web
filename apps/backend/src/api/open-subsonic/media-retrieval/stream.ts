@@ -31,7 +31,6 @@ export const streamRoutes: FastifyPluginAsync = async (app: FastifyInstance) => 
       }
 
       const trackFilePath = toRealPath(track.filePath)
-      console.log(trackFilePath)
       let stat
       try {
         stat = statSync(trackFilePath)

@@ -55,7 +55,6 @@ export const runSweep = async (opts: { force?: boolean } = {}) => {
     await mbLookupQueue.add('artist-cover', { artistId: row.artistId })
   }
 
-  console.log(staleAlbums)
   for (const row of staleAlbums) {
   //   await mbLookupQueue.add('album', { albumId: row.albumId })
     await mbLookupQueue.add('album-cover', { albumId: row.albumId })

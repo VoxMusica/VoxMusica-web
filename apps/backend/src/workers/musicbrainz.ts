@@ -6,4 +6,5 @@ export const mbApi = new MusicBrainzApi({
   appName: APP_NAME,
   appVersion: APP_VERSION,
   appContactInfo: APP_CONTACT,
+  rateLimit: [4, 5] // 4 requests each 5s
 })

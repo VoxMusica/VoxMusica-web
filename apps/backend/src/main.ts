@@ -60,13 +60,18 @@ app.register(isAdminOrBootstrap)
 
 
 
-app.register(cachingPlugin, { cache })
+app.register(cachingPlugin, {
+  cache: {
+    ...cache,
+    delete: cache.del,
+  },
+})
 
 app.register(apiRoutes)
-app.setErrorHandler((error, request, reply) => {
+app.setErrorHandler((error: { statusCode?: number, message?: string }, request, reply) => {
   request.log.error({ err: error }, 'unhandled error') // full detail server-side only
 
-  const statusCode = error?.statusCode ?? 500
+  const statusCode = error.statusCode ?? 500
 
   reply.status(statusCode).send({
     error: statusCode === 500 ? 'Internal server error' : error.message,

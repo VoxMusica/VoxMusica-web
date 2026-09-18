@@ -46,8 +46,6 @@ export const toRealPath = (codedPath: string): string => {
   const libraries = config.get('library.music')
   const libraryPath = libraries[alias]
 
-  console.log(alias, libraryPath)
-
   if (libraryPath == null) {
     throw new Error(`Unknown library alias: ${alias}`)
   }

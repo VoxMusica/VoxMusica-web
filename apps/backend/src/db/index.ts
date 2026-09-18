@@ -19,4 +19,4 @@ const client = createClient({
   url: `file:${path.join(config.get('data.dir'), config.get('data.filename'))}`,
 });
 
-export const db = drizzle(client, { schema, })
+export const db = drizzle(client, { schema })

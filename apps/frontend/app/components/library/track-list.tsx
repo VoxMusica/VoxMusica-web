@@ -53,7 +53,7 @@ const TrackList = ({
 
   return (
     <ol className="flex flex-col divide-y">
-      {tracks.slice(0, maxHeight).map((track, index) => {
+      {(maxHeight == 0 ? tracks : tracks.slice(0, maxHeight)).map((track, index) => {
         const isCurrent = currentSongId === track.id
 
         return (

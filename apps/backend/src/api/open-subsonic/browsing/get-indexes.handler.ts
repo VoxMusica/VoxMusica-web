@@ -24,7 +24,7 @@ export const getIndexesHandler: FastifyPluginAsync = async (app) => {
       return subsonicOk(request.query, reply, cached.item)
     }
   
-    const index = await getIndex()
+    const index = await getIndex(request.subsonicUser.id)
 
     const result = {
       indexes: {

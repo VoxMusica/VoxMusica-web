@@ -1,4 +1,6 @@
+import { SCRIPTS, THEME_VARIANTES } from '@voxmusica/types'
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
+
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
@@ -21,3 +23,9 @@ export const apiKeys = sqliteTable('api_keys', {
   index('api_keys_key_hash_idx').on(table.keyHash),
   index('api_keys_user_id_idx').on(table.userId)
 ])
+
+export const userPreferences = sqliteTable('user_preferences', {
+  userId: text('user_id').notNull().primaryKey().references(() => users.id, { onDelete: 'cascade'}),
+  script: text('script', { enum: SCRIPTS}),
+  themeVariant: text('theme_variant', {enum: THEME_VARIANTES}).notNull().default('system')
+})

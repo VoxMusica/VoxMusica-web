@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import { artistID3Schema } from './oss-artist.ts' // assumes you already have this from getArtist/ArtistID3
 import { itemGenreSchema } from './oss-common.ts'
+import { SCRIPTS } from '../constants.ts'
 
 export const contributorSchema = z.object({
   role: z.string(),
@@ -102,3 +103,15 @@ export type Contributor = z.infer<typeof contributorSchema>
 export type ReplayGain = z.infer<typeof replayGainSchema>
 export type Work = z.infer<typeof workSchema>
 export type Movement = z.infer<typeof movementSchema>
+
+
+export const childWithTransliterationsSchema = childSchema.extend({
+  transliterations: z.record(
+    z.string(),
+    z.array(z.object({
+      script: z.enum(SCRIPTS),
+      value: z.string(),
+    }))
+  )
+})
+export type ChildWithTransliterations = z.infer<typeof childWithTransliterationsSchema>

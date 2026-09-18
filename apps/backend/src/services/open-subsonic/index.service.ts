@@ -1,7 +1,7 @@
 import { getAllArtistsWithAlbumCount } from "#db/dao/artist.dao"
 import { ignoredArticles } from "./config.ts"
 
-import type { Artist, ArtistWithExtraData } from "#db/schema"
+import type { ArtistWithExtraData } from "#db/schema"
 
 export const getIndexLetter = (title: string): string => {
   const pattern = new RegExp(String.raw`^(${ignoredArticles.join('|')})\\s+`, 'i')
@@ -13,8 +13,8 @@ export const getIndexLetter = (title: string): string => {
 }
 
 
-export const getAllArtistsByLetter: () => Promise<Map<string, ArtistWithExtraData[]>> = async ()  => {
-  const artists = await getAllArtistsWithAlbumCount()
+export const getAllArtistsByLetter = async (userId: string): Promise<Map<string, ArtistWithExtraData[]>>  => {
+  const artists = await getAllArtistsWithAlbumCount(userId)
   return artists
     .map(artist => ({
       ...artist,

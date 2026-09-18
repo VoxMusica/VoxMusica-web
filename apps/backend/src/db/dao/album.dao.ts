@@ -1,9 +1,9 @@
-import { and, count, eq, getTableColumns, sum } from 'drizzle-orm'
+import { and, count, eq, getTableColumns, sum, sql } from 'drizzle-orm'
 
+import { albumTransliterations, artistTransliterations } from '#db/aliases/scripts'
 import { db } from '#db/index'
+import { userPreferences } from '#db/schema'
 import { albumMusicbrainz, albums, artists, favorites, ratings, tracks } from '#db/schemas/music'
-
-import type { AlbumID3 } from '@voxmusica/types'
 
 
 
@@ -32,25 +32,48 @@ export const updateAlbumMusicbrainzLastFetched = async (
 
 export interface GetAlbumParams {
   albumId: string
+  userId?: string
 }
 
-export const getAlbum =  ({
-  albumId
+export const getAlbum = ({
+  albumId,
+  userId
 }: GetAlbumParams) => db
-    .select({
-      ...getTableColumns(albums),
-      artist: artists,
-      songCount: count(tracks.id),
-      duration: sum(tracks.duration),
-    })
-    .from(albums)
-    .innerJoin(artists, eq(albums.artistId, artists.id))
-    .leftJoin(tracks, eq(tracks.albumId, albums.id))
-    .where(eq(albums.id, albumId))
-    .groupBy(albums.id, artists.id)
-    .limit(1)
-    .then(v => v.at(0))
-    
+  .select({
+    ...getTableColumns(albums),
+    title: sql<string>`coalesce(${albumTransliterations.value}, ${albums.title})`,
+    artist: {
+      ...getTableColumns(artists),
+      name: sql<string>`coalesce(${artistTransliterations.value}, ${artists.name})`,
+    },
+    songCount: count(tracks.id),
+    duration: sum(tracks.duration),
+  })
+  .from(albums)
+  .innerJoin(artists, eq(albums.artistId, artists.id))
+  .leftJoin(tracks, eq(tracks.albumId, albums.id))
+  .leftJoin(userPreferences, eq(userPreferences.userId, userId ?? ''))
+  .leftJoin(
+    albumTransliterations,
+    and(
+      eq(albumTransliterations.itemType, 'album'),
+      eq(albumTransliterations.itemId, albums.id),
+      eq(albumTransliterations.script, userPreferences.script)
+    )
+  )
+  .leftJoin(
+    artistTransliterations,
+    and(
+      eq(artistTransliterations.itemType, 'artist'),
+      eq(artistTransliterations.itemId, artists.id),
+      eq(artistTransliterations.script, userPreferences.script)
+    )
+  )
+  .where(eq(albums.id, albumId))
+  .groupBy(albums.id, artists.id)
+  .limit(1)
+  .then(v => v.at(0))
+
 export interface GetAlbumUserInfoParams extends GetAlbumParams {
   userId: string
 }

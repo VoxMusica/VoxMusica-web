@@ -18,6 +18,15 @@ export const systemRoutes: FastifyPluginAsync = async (app: FastifyInstance) => 
       },
     })
   })
+
+  app.get<OpenSubsonicRequest>('/getOpenSubsonicExtensions', async (request, reply) => {
+    return subsonicOk(request.query, reply, {
+      openSubsonicExtensions: [
+        { "name": "topSongsByArtistId", "versions": [1] },
+        { "name": "transliteratedFields", "versions": [1] },
+      ],
+    })
+  })
 }
 
 export default systemRoutes

@@ -39,7 +39,6 @@ const VolumePicker = ({ volume, onVolumeChange, className = '' }: VolumePickerPr
 
   const handleMouseLeave = useMemo(
     () => debounce(() => {
-      console.log('mouse out')
       setHovered(false)
     }, 250), [])
 
