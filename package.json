@@ -15,7 +15,11 @@
     "url": "https://github.com/VoxMusica/VoxMusica-app"
   },
   "scripts": {
+    "frontend:lint": "yarn workspace @voxmusica/frontend lint",
+    "frontend:build": "yarn workspace @voxmusica/frontend build",
     "frontend:dev": "yarn workspace @voxmusica/frontend dev",
+    "backend:lint": "yarn workspace @voxmusica/backend lint ",
+    "backend:build": "yarn workspace @voxmusica/backend build",
     "backend:dev": "yarn workspace @voxmusica/backend dev",
     "backend:worker": "yarn workspace @voxmusica/backend worker",
     "build": "yarn workspaces foreach -A run build",
