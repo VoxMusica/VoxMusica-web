@@ -29,7 +29,9 @@ jobs:
           cache-dependency-path: yarn.lock
 
       - name: Enable Corepack
-        run: corepack enable
+        run: |
+          npm install -g corepack@latest
+          corepack enable
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -69,7 +71,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./apps/frontend
+          context: .
+          file: ./apps/frontend/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha,scope=frontend-${{ github.ref_name }}
@@ -107,7 +110,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./apps/backend
+          context: .
+          file: ./apps/backend/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha,scope=backend-${{ github.ref_name }}
