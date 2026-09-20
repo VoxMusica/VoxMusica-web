@@ -31,7 +31,7 @@ jobs:
             node_modules
             apps/*/node_modules
             packages/*/node_modules
-            .yarn/install-state.gz
+            .yarn
           retention-days: 1
 
   # ---------- FRONTEND ----------
@@ -44,9 +44,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { name: node-modules }
       - name: debug
-        run: ls /home/runner/work/VoxMusica-web/VoxMusica-web
-      - name: debug 2
-        run: ls /home/runner/work/VoxMusica-web/
+        run: ls /home/runner/work/VoxMusica-web/VoxMusica-web/.yarn
       - name: 🔧 Enable Corepack
         run: npm install -g corepack@latest && corepack enable
       - run: yarn frontend:lint
