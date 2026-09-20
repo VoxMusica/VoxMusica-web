@@ -2838,6 +2838,7 @@ __metadata:
     dotenv: "npm:^17.4.2"
     drizzle-kit: "npm:^0.31.10"
     drizzle-orm: "npm:^0.45.2"
+    eslint: "npm:^10.11.0"
     eslint-import-resolver-typescript: "npm:^4.4.5"
     fastify: "npm:^5.12.1"
     fastify-type-provider-zod: "npm:^7.0.0"
