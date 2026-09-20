@@ -24,11 +24,10 @@ jobs:
           cache: yarn
           cache-dependency-path: yarn.lock
       - run: yarn install --frozen-lockfile
-      - name: debug
-        run: ls -al /home/runner/work/VoxMusica-web/VoxMusica-web/
       - uses: actions/upload-artifact@v4
         with:
           name: node-modules
+          include-hidden-files: true
           path: |
             node_modules
             apps/*/node_modules
