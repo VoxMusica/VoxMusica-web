@@ -26,7 +26,7 @@ export const cache = {
     const keys: string[] = []
     let cursor = '0'
     do {
-      const [nextCursor, foundKeys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100)
+      const [nextCursor, foundKeys] = (await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100)) as [string, string[]]
       cursor = nextCursor
       keys.push(...foundKeys)
     } while (cursor !== '0')

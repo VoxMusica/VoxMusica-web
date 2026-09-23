@@ -1,9 +1,9 @@
-import IORedis from 'ioredis'
+import { Redis } from 'ioredis'
 
 import config from '#config'
 
 export const redis = config.get('cache.enabled')
-  ? new IORedis({
+  ? new Redis({
   host: config.get('cache.redis.host'),
   port: config.get('cache.redis.port'),
   maxRetriesPerRequest: null,

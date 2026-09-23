@@ -1,10 +1,11 @@
-import { subsonicError, type SubsonicRequest } from '#api/open-subsonic/responses/subsonic.response'
+import { subsonicError } from '#api/open-subsonic/responses/subsonic.response'
 import { verifySubsonicCredentials } from '#services/open-subsonic/subsonic-auth.service'
 import { findUserById } from '#services/users/users.service'
 
+import type { OpenSubsonicRequest } from '@voxmusica/types'
 import type { FastifyRequest, FastifyReply } from 'fastify'
 
-export const subsonicAuthHook = async (request: FastifyRequest<SubsonicRequest>, reply: FastifyReply) => {
+export const subsonicAuthHook = async (request: FastifyRequest<OpenSubsonicRequest>, reply: FastifyReply) => {
   const query = request.query as Record<string, string>
   try{
     const token = await request.jwtVerify() as {sub?: string}

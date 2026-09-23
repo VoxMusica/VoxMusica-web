@@ -91,3 +91,7 @@ web_modules/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+
+# build
+**/dist

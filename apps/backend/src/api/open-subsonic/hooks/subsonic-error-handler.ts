@@ -11,6 +11,8 @@ export const subsonicErrorHandler = (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
+  const query = request.query as Parameters<typeof subsonicError>[0]
+
   if (hasZodFastifySchemaValidationErrors(error)) {
     const message = error.validation
       .map((validationError) => {
@@ -20,8 +22,8 @@ export const subsonicErrorHandler = (
       })
       .join(', ')
 
-    return subsonicError(request.query as Record<string, string>, reply, 10, message)
+    return subsonicError(query, reply, 10, message)
   }
   request.log.error(error)
-  return subsonicError(request.query as Record<string, string>, reply, 0, 'A generic error occurred')
+  return subsonicError(query, reply, 0, 'A generic error occurred')
 }

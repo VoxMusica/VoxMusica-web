@@ -1,32 +1,29 @@
 FROM node:26-alpine AS build
-WORKDIR /app
-
 RUN npm install -g corepack@latest && corepack enable
+WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY packages ./packages
-COPY apps ./apps
+COPY apps/backend ./apps/backend
+COPY apps/frontend/package.json ./apps/frontend/package.json
 
-RUN yarn install --frozen-lockfile && yarn cache clean
-RUN yarn workspace backend add @libsql/linux-x64-musl --optional
+RUN yarn workspaces focus @voxmusica/backend
+RUN yarn workspace @voxmusica/backend add @libsql/linux-x64-musl --optional
+RUN yarn workspace @voxmusica/backend build
+# make sure apps/backend/tsconfig.build.json's outDir resolves to apps/backend/dist — check this first
 
-COPY tsconfig.json tsconfig.build.json ./
-COPY apps/backend/tsconfig.json apps/backend/tsconfig.build.json ./apps/backend/
-COPY apps/backend/src ./apps/backend/src
-
-RUN yarn workspace backend build
 
 FROM node:26-alpine AS production-dependencies-env
-WORKDIR /app
-
 RUN npm install -g corepack@latest && corepack enable
+WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY packages ./packages
-COPY apps ./apps
+COPY apps/backend ./apps/backend
+COPY apps/frontend/package.json ./apps/frontend/package.json
 
-RUN yarn workspace backend add @libsql/linux-x64-musl --optional
-RUN yarn workspaces focus backend --production && yarn cache clean
+RUN yarn workspace @voxmusica/backend add @libsql/linux-x64-musl --optional
+RUN yarn workspaces focus @voxmusica/backend --production
 
 
 FROM node:26-alpine AS runtime
@@ -36,7 +33,6 @@ RUN apk add --no-cache chromaprint
 
 COPY --from=production-dependencies-env /app/node_modules ./node_modules
 COPY --from=production-dependencies-env /app/package.json ./package.json
-COPY --from=production-dependencies-env /app/apps/backend/node_modules ./apps/backend/node_modules
 COPY --from=production-dependencies-env /app/apps/backend/package.json ./apps/backend/package.json
 COPY --from=build /app/apps/backend/dist ./apps/backend/dist
 COPY apps/backend/entrypoint.sh ./entrypoint.sh

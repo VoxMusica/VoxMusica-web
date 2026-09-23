@@ -185,7 +185,7 @@ export const getArtistTopSongs = async ({
     db
       .select({
         itemId: trackTransliterations.itemId,
-        trackAll: sql<string>`json_group_array(json_object('script', ${trackTransliterations.script}, 'value', ${trackTransliterations.value}))`.as('trackAll'),
+        trackAll: sql<transliterationType['transliterations']>`json_group_array(json_object('script', ${trackTransliterations.script}, 'value', ${trackTransliterations.value}))`.as('trackAll'),
       })
       .from(trackTransliterations)
       .where(eq(trackTransliterations.itemType, 'track'))
@@ -196,7 +196,7 @@ export const getArtistTopSongs = async ({
     db
       .select({
         itemId: albumTransliterations.itemId,
-        albumAll: sql<string>`json_group_array(json_object('script', ${albumTransliterations.script}, 'value', ${albumTransliterations.value}))`.as('albumAll'),
+        albumAll: sql<transliterationType['transliterations']>`json_group_array(json_object('script', ${albumTransliterations.script}, 'value', ${albumTransliterations.value}))`.as('albumAll'),
       })
       .from(albumTransliterations)
       .where(eq(albumTransliterations.itemType, 'album'))
@@ -207,7 +207,7 @@ export const getArtistTopSongs = async ({
     db
       .select({
         itemId: artistTransliterations.itemId,
-        artistAll: sql<string>`json_group_array(json_object('script', ${artistTransliterations.script}, 'value', ${artistTransliterations.value}))`.as('artistAll'),
+        artistAll: sql<transliterationType['transliterations']>`json_group_array(json_object('script', ${artistTransliterations.script}, 'value', ${artistTransliterations.value}))`.as('artistAll'),
       })
       .from(artistTransliterations)
       .where(eq(artistTransliterations.itemType, 'artist'))
@@ -220,17 +220,17 @@ export const getArtistTopSongs = async ({
       track: {
         ...getTableColumns(tracks),
         title: sql<string>`coalesce(${trackTransliterations.value}, ${tracks.title})`,
-        transliterations: sql<string>`coalesce(${trackTranslitAgg.trackAll}, '[]')`,
+        transliterations: sql<transliterationType['transliterations']>`coalesce(${trackTranslitAgg.trackAll}, '[]')`,
       },
       album: {
         ...getTableColumns(albums),
         title: sql<string>`coalesce(${albumTransliterations.value}, ${albums.title})`,
-        transliterations: sql<string>`coalesce(${albumTranslitAgg.albumAll}, '[]')`,
+        transliterations: sql<transliterationType['transliterations']>`coalesce(${albumTranslitAgg.albumAll}, '[]')`,
       },
       artist: {
         ...getTableColumns(artists),
         name: sql<string>`coalesce(${artistTransliterations.value}, ${artists.name})`,
-        transliterations: sql<string>`coalesce(${artistTranslitAgg.artistAll}, '[]')`,
+        transliterations: sql<transliterationType['transliterations']>`coalesce(${artistTranslitAgg.artistAll}, '[]')`,
       },
       userPlayCount: userPlayStats.userPlayCount,
       userLastPlayedAt: userPlayStats.userLastPlayedAt,

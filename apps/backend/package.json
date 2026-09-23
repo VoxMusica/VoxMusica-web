@@ -70,6 +70,7 @@
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/convict": "^6.1.6",
+    "@types/ioredis": "^5.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/ms": "^2.1.0",
     "@types/node": "^26.2.0",
