@@ -105,10 +105,11 @@ jobs:
       - name: Set image tags
         id: tags
         run: |
+          NAMESPACE=$(echo "${IMAGE_NAMESPACE}" | tr '[:upper:]' '[:lower:]')
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "tags=${REGISTRY}/${IMAGE_NAMESPACE}/frontend:latest,${REGISTRY}/${IMAGE_NAMESPACE}/frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            echo "tags=${REGISTRY}/${NAMESPACE}/frontend:latest,${REGISTRY}/${NAMESPACE}/frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT"
           else
-            echo "tags=${REGISTRY}/${IMAGE_NAMESPACE}/frontend:dev,${REGISTRY}/${IMAGE_NAMESPACE}/frontend:dev-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            echo "tags=${REGISTRY}/${NAMESPACE}/frontend:dev,${REGISTRY}/${NAMESPACE}/frontend:dev-${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
       - name: 🐳 Build and push
         uses: docker/build-push-action@v6
@@ -140,10 +141,11 @@ jobs:
       - name: Set image tags
         id: tags
         run: |
+          NAMESPACE=$(echo "${IMAGE_NAMESPACE}" | tr '[:upper:]' '[:lower:]')
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "tags=${REGISTRY}/${IMAGE_NAMESPACE}/backend:latest,${REGISTRY}/${IMAGE_NAMESPACE}/backend:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            echo "tags=${REGISTRY}/${NAMESPACE}/backend:latest,${REGISTRY}/${NAMESPACE}/backend:${{ github.sha }}" >> "$GITHUB_OUTPUT"
           else
-            echo "tags=${REGISTRY}/${IMAGE_NAMESPACE}/backend:dev,${REGISTRY}/${IMAGE_NAMESPACE}/backend:dev-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            echo "tags=${REGISTRY}/${NAMESPACE}/backend:dev,${REGISTRY}/${NAMESPACE}/backend:dev-${{ github.sha }}" >> "$GITHUB_OUTPUT"
           fi
       - name: 🐳 Build and push
         uses: docker/build-push-action@v6
