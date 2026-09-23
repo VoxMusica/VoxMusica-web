@@ -2,10 +2,11 @@ import { Disc3, Flame, Headphones, ListMusic, Mic, Sparkle, Sparkles, Tags } fro
 import { useTranslation } from 'react-i18next'
 import { Outlet, useNavigate } from 'react-router'
 
-import type { SidebarItem } from '@/components/sidebar/item'
 
 import { Sidebar } from '@/components/sidebar/sidebar'
 import { cn } from '@/lib/utils'
+
+import type { SidebarItem } from '@/components/sidebar/item'
 
 
 const NewReleaseIcon = ({ className }: { className?: string }) => (

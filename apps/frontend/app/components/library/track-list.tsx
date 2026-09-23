@@ -3,13 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import Rating from './rating'
-
-import type { Child } from '@voxmusica/types'
-
 import EqualizerBars from '@/components/player/equalizer-bars'
 import { Button } from '@/components/ui/button'
 import { getAnalyser } from '@/lib/audio'
 import { formatDuration } from '@/lib/format-duration'
+
+import type { Child } from '@voxmusica/types'
 
 
  interface TrackListProps {

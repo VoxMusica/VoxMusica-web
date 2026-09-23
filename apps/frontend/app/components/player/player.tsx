@@ -6,7 +6,6 @@ import Disc from './disc'
 import EqualizerBars from './equalizer-bars'
 import PlayerProgress from './progress'
 import { TrackInfo } from './track-info'
-
 import { getAnalyser } from '@/lib/audio'
 import { getCoverArtUrl } from '@/lib/subsonic-client'
 import { usePlayerStore } from '@/store/player.store'

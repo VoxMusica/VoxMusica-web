@@ -3,10 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { albumKeys } from './albums.queries'
 import { artistKeys } from './artists.queries'
 import { trackKeys } from './track.queries'
+import { apiClient } from '@/lib/open-subsonic.api-client'
 
 import type { Child } from '@voxmusica/types'
 
-import { apiClient } from '@/lib/open-subsonic.api-client'
 
 
 export const useSetRatingMutation = () => {

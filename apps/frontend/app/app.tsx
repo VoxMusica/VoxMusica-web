@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { Navigate, Outlet, useLoaderData, useLocation, useRouteLoaderData } from 'react-router'
 
-import type { loader as rootLoader } from '@/root'
 
 import i18n from '@/i18n'
 import { Bootstrap } from '@/pages/bootstrap.page'
 import { ErrorScreen } from '@/pages/error.page'
 import { useSystemInfo } from '@/queries/system.queries'
 import { useSystemStore } from '@/store/system.store'
+
+import type { loader as rootLoader } from '@/root'
 
 
 const App = () => {

@@ -12,6 +12,6 @@ export const hasChineseExclusiveKanji = (text: string): boolean =>
   [...text].some((char) => CHINESE_SIMPLIFIED_EXCLUSIVE.has(char))
 
 // anything outside basic + extended Latin, punctuation, digits, and whitespace needs transliteration
-const NON_LATIN_REGEX = /[^\u0000-\u024F\u1E00-\u1EFF\u2000-\u206F\s\p{P}\p{N}]/u
+const NON_LATIN_REGEX = /[^\p{Script=Latin}\p{P}\p{N}\p{White_Space}\p{Cc}]/u
 
 export const needsTransliteration = (text: string): boolean => NON_LATIN_REGEX.test(text)

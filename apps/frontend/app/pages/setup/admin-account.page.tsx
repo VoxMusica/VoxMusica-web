@@ -5,7 +5,7 @@ import { useForm, Controller  } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useOutletContext } from 'react-router'
 
-import type { SetupOutletContext } from '@/routes/setup.routes'
+
 
 import { PasswordStrengthMeter } from '@/components/form/password-strength-meter'
 import { TranslatedFieldError } from '@/components/translated-field-error'
@@ -13,11 +13,13 @@ import {
   Field,
   FieldGroup,
   FieldLabel,
-  FieldError
 } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { useCreateAdminAccount } from '@/queries/setup.queries'
 import { createAdminAccountSchema, type AdminAccountFormValues } from '@/services/setup/admin-account.schema'
+
+import type { SetupOutletContext } from '@/routes/setup.routes'
+
 
 
 

@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 
+import { subsonicFetch } from '@/lib/subsonic-client'
+
 import type { Child, GetTopSongsReply } from '@voxmusica/types'
 
-import { subsonicFetch } from '@/lib/subsonic-client'
 
 
 export const trackKeys = {

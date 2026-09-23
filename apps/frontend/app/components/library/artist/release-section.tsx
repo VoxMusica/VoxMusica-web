@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
-import type { AlbumID3, Child } from '@voxmusica/types'
 
 import { Button } from '@/components/ui/button'
 import { apiClient } from '@/lib/open-subsonic.api-client'
 import { getCoverArtUrl } from '@/lib/subsonic-client'
+
+import type { AlbumID3, Child } from '@voxmusica/types'
 
 const ReleaseSection = ({
   title,

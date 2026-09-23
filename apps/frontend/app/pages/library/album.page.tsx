@@ -2,7 +2,6 @@ import { Play, Shuffle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 
-import type { Child } from '@voxmusica/types'
 
 import TrackList from '@/components/library/track-list'
 import Loading from '@/components/loading'
@@ -12,6 +11,8 @@ import { getCoverArtUrl } from '@/lib/subsonic-client'
 import { useAlbum } from '@/queries/library/albums.queries'
 import { useInvalidateTopSongsForTrack, useSetRatingMutation } from '@/queries/library/media-annotation.queries'
 import { usePlayerStore } from '@/store/player.store'
+
+import type { Child } from '@voxmusica/types'
 
 
 export const AlbumPage = () => {

@@ -2,12 +2,11 @@
 import { createComputed } from 'zustand-computed'
 
 import { createStore } from '.'
-
-import type { Child } from '@voxmusica/types'
-
 import { getAudio } from '@/lib/audio'
 import { apiClient } from '@/lib/open-subsonic.api-client'
 import { getStreamUrl } from '@/lib/subsonic-client'
+
+import type { Child } from '@voxmusica/types'
 
 export type RepeatMode = 'off' | 'all' | 'one'
 

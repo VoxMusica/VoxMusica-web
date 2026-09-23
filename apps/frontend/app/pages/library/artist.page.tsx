@@ -2,7 +2,6 @@ import { Play, Shuffle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
-import type { Child } from '@voxmusica/types'
 
 import ReleaseSection from '@/components/library/artist/release-section'
 import { Fav } from '@/components/library/fav'
@@ -15,6 +14,8 @@ import { useArtist } from '@/queries/library/artists.queries'
 import { useInvalidateTopSongsForTrack, useSetFavMutation, useSetRatingMutation, useUnFavMutation } from '@/queries/library/media-annotation.queries'
 import { useTopSongs } from '@/queries/library/track.queries'
 import { usePlayerStore } from '@/store/player.store'
+
+import type { Child } from '@voxmusica/types'
 
 export const ArtistPage = () => {
   const { t } = useTranslation()

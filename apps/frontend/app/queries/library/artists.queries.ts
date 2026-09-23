@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 
+import { subsonicFetch } from '@/lib/subsonic-client'
+
 import type { ArtistWithAlbumsID3, GetArtistResponse, GetArtistsResponse, IndexArtist } from '@voxmusica/types'
 
-import { subsonicFetch } from '@/lib/subsonic-client'
 
 interface WithName{
   name: string

@@ -4,14 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 
 import { SETUP_STEPS } from './config'
-
-import type { SetupOutletContext } from '@/routes/setup.routes'
-
 import { AnimatedHeight } from '@/components/animated-height'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { systemKeys } from '@/queries/system.queries'
+
+import type { SetupOutletContext } from '@/routes/setup.routes'
 
 
 const SetupLayout = () => {
