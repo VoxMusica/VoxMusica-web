@@ -19,7 +19,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
     "jiti": "^2.7.0",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "eslint-plugin-import-x": "^4.17.1",
