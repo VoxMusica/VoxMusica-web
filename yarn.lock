@@ -1526,25 +1526,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@libsql/client@npm:^0.17.4":
-  version: 0.17.4
-  resolution: "@libsql/client@npm:0.17.4"
+"@libsql/client@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "@libsql/client@npm:0.18.0"
   dependencies:
-    "@libsql/core": "npm:^0.17.4"
+    "@libsql/core": "npm:^0.18.0"
     "@libsql/hrana-client": "npm:^0.10.0"
     js-base64: "npm:^3.7.5"
     libsql: "npm:^0.5.28"
     promise-limit: "npm:^2.7.0"
-  checksum: 10c0/3cebcee2b60a5a9927cc03bd424033cd55a6e05af897fb99974d43d45f06fe8dcaaff4d3c82e2299b2ff0ae066f32bb76fc3e5431768136e002e35533b111c4d
+  checksum: 10c0/3492699b754be04b186bc64139ea400f0458ab5a25e37712f802b18cb22f07d851579b62be6ca1fc89121ebb062aac03c4a3bc6b9c51b10cd32df21fde39d726
   languageName: node
   linkType: hard
 
-"@libsql/core@npm:^0.17.4":
-  version: 0.17.4
-  resolution: "@libsql/core@npm:0.17.4"
+"@libsql/core@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "@libsql/core@npm:0.18.0"
   dependencies:
     js-base64: "npm:^3.7.5"
-  checksum: 10c0/907abad154a940da4168878f330b69a39793098617d94929ca685a2ac5d18304f3751fe1b235303de8435097d232cb5d9e7476022329808faa436aeff8fb2b64
+  checksum: 10c0/f5478302191376e04dc3c5e9e42f7c53414f90ed015e30867a55c06a6b94bb7854022463768aa6652aba879ea264be265bff9134eeb7f2d1dae35b343b1ff41f
   languageName: node
   linkType: hard
 
@@ -2827,7 +2827,7 @@ __metadata:
     "@fastify/caching": "npm:^9.0.4"
     "@fastify/cookie": "npm:^11.1.2"
     "@fastify/jwt": "npm:^10.2.2"
-    "@libsql/client": "npm:^0.17.4"
+    "@libsql/client": "npm:^0.18.0"
     "@sglkc/kuroshiro": "npm:^1.0.1"
     "@sglkc/kuroshiro-analyzer-kuromoji": "npm:^1.0.1"
     "@types/bcrypt": "npm:^6.0.0"
@@ -2845,7 +2845,7 @@ __metadata:
     convict: "npm:^6.2.5"
     convict-format-with-validator: "npm:^6.2.0"
     cross-env: "npm:^10.1.0"
-    dotenv: "npm:^17.4.2"
+    dotenv: "npm:^18.0.3"
     drizzle-kit: "npm:^0.31.10"
     drizzle-orm: "npm:^0.45.2"
     eslint: "npm:^10.11.0"
@@ -2869,7 +2869,7 @@ __metadata:
     ts-node: "npm:^10.9.2"
     tsx: "npm:^4.23.13"
     type-fest: "npm:^5.8.0"
-    typescript: "npm:6.0.3"
+    typescript: "npm:^6.0.3"
     uuid: "npm:^14.0.2"
     winston-transport: "npm:^4.9.0"
     xmlbuilder2: "npm:^4.0.3"
@@ -2928,7 +2928,7 @@ __metadata:
     tailwind-merge: "npm:^3.6.0"
     tailwindcss: "npm:^4.2.2"
     tw-animate-css: "npm:^1.4.0"
-    typescript: "npm:^5.9.3"
+    typescript: "npm:^6.0.3"
     vite: "npm:^8.0.3"
     zod: "npm:^4.4.3"
     zustand: "npm:^5.0.15"
@@ -2947,7 +2947,7 @@ __metadata:
     eslint-plugin-import-x: "npm:^4.17.1"
     eslint-plugin-no-relative-import-paths: "npm:^1.6.1"
     jiti: "npm:^2.7.0"
-    typescript: "npm:^5.5.0"
+    typescript: "npm:^6.0.3"
     typescript-eslint: "npm:^8.68.0"
     zod: "npm:^4.5.4"
   languageName: unknown
@@ -4153,10 +4153,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^17.2.1, dotenv@npm:^17.4.2":
+"dotenv@npm:^17.2.1":
   version: 17.4.2
   resolution: "dotenv@npm:17.4.2"
   checksum: 10c0/164f8e77a646c8446867d5b588d26ea6005c8ea7c5eb41cf926f6113d23f2191355f6e0cfd95ea9bab98394a5b0a3f1e51a8399711b666fe55cc7b0bd745f942
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^18.0.3":
+  version: 18.0.3
+  resolution: "dotenv@npm:18.0.3"
+  bin:
+    dotenv: dist/index.cjs
+  checksum: 10c0/0132d3dba2022808c31d0c8191cd8567351c8a1b932f751237cfe502563b9eaab309754bd66e5965f2ccee887c3527f883e29016cb4d691df8519e7fc3d452fd
   languageName: node
   linkType: hard
 
@@ -9997,7 +10006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:6.0.3":
+"typescript@npm:^6.0.3":
   version: 6.0.3
   resolution: "typescript@npm:6.0.3"
   bin:
@@ -10007,33 +10016,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.5.0, typescript@npm:^5.9.3":
-  version: 5.9.3
-  resolution: "typescript@npm:5.9.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/6bd7552ce39f97e711db5aa048f6f9995b53f1c52f7d8667c1abdc1700c68a76a308f579cd309ce6b53646deb4e9a1be7c813a93baaf0a28ccd536a30270e1c5
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^6.0.3#optional!builtin<compat/typescript>":
   version: 6.0.3
   resolution: "typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>::version=6.0.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/2f25c74e65663c248fa1ade2b8459d9ce5372ff9dad07067310f132966ebec1d93f6c42f0baf77a6b6a7a91460463f708e6887013aaade22111037457c6b25df
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A^5.5.0#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.9.3#optional!builtin<compat/typescript>":
-  version: 5.9.3
-  resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/ad09fdf7a756814dce65bc60c1657b40d44451346858eea230e10f2e95a289d9183b6e32e5c11e95acc0ccc214b4f36289dcad4bf1886b0adb84d711d336a430
   languageName: node
   linkType: hard
 

@@ -10,6 +10,7 @@ import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod
 import { apiRoutes } from '#api/index'
 import { cache } from '#cache'
 import { config } from '#config'
+import { migrateConfig } from '#db/migrate'
 import logger from '#logger'
 import authenticatePlugin from '#plugins/authenticate'
 import isAdminPlugin from '#plugins/is-admin'
@@ -80,6 +81,8 @@ app.setErrorHandler((error: { statusCode?: number, message?: string }, request, 
 })
 
 app.decorateRequest('subsonicUser', undefined)
+
+await migrateConfig(app.log)
 
 app.listen({
   port: config.get('server.port'),
