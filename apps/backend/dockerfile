@@ -1,0 +1,46 @@
+FROM node:26-alpine AS build
+RUN npm install -g corepack@latest && corepack enable
+WORKDIR /app
+
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY packages ./packages
+COPY apps/backend ./apps/backend
+COPY apps/frontend/package.json ./apps/frontend/package.json
+
+RUN yarn workspaces focus @voxmusica/backend
+RUN yarn workspace @voxmusica/backend add @libsql/linux-x64-musl --optional
+RUN yarn workspace @voxmusica/backend build
+# make sure apps/backend/tsconfig.build.json's outDir resolves to apps/backend/dist — check this first
+
+
+FROM node:26-alpine AS production-dependencies-env
+RUN npm install -g corepack@latest && corepack enable
+WORKDIR /app
+
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY packages ./packages
+COPY apps/backend ./apps/backend
+COPY apps/frontend/package.json ./apps/frontend/package.json
+
+RUN yarn workspace @voxmusica/backend add @libsql/linux-x64-musl --optional
+RUN yarn workspaces focus @voxmusica/backend --production
+
+
+FROM node:26-alpine AS runtime
+WORKDIR /app
+
+RUN apk add --no-cache chromaprint
+
+COPY --from=production-dependencies-env /app/node_modules ./node_modules
+COPY --from=production-dependencies-env /app/package.json ./package.json
+COPY --from=production-dependencies-env /app/apps/backend/package.json ./apps/backend/package.json
+COPY --from=build /app/apps/backend/dist ./apps/backend/dist
+COPY apps/backend/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+VOLUME /data
+
+USER node
+WORKDIR /app/apps/backend
+ENTRYPOINT ["../../entrypoint.sh"]
+CMD []

@@ -1,0 +1,17 @@
+# .dockerignore
+node_modules
+**/node_modules
+.yarn/cache
+.yarn/install-state.gz
+**/dist
+**/build
+**/.turbo
+.git
+.github
+*.log
+.env
+.env.*
+.vscode
+.idea
+# runtime/local data — never belongs in a build context
+apps/backend/local

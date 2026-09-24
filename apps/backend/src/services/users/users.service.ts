@@ -1,0 +1,49 @@
+import { randomUUID } from 'node:crypto'
+
+import bcrypt from 'bcrypt'
+import { count, eq } from 'drizzle-orm'
+
+import { db } from '#db/index'
+import { userPreferences, users } from '#db/schema'
+import { parseRoles, type Role } from './model/role.ts'
+
+export const getUserCount = async () => {
+  const result = await db.select({ count: count() }).from(users)
+  return result?.at(0)?.count ?? 0
+}
+
+export const findUserByUsername = async (username: string) => db
+.select().from(users).where(eq(users.username, username))
+.then(result => result?.at(0) ?? null)
+
+export const getUserPreferences = async (userId: string) => db
+  .select().from(userPreferences).where(eq(userPreferences.userId, userId))
+  .then(result => result?.at(0))
+
+export const findUserById = async (id: string) =>  db
+.select().from(users).where(eq(users.id, id))
+.then(result => result?.at(0) ?? null)
+
+export const verifyPassword = async (plain: string, hash: string) => {
+  return bcrypt.compare(plain, hash);
+}
+
+export const hasRole = (rolesRaw: string, role: Role): boolean => parseRoles(rolesRaw).includes(role)
+
+type CreateUserInput = { username: string, password: string, roles: Role[] }
+export const createUser = async ({ username, password, roles } : CreateUserInput) => {
+  const passwordHash = await bcrypt.hash(password, 12);
+  const result = await db.insert(users).values({
+    id: randomUUID(),
+    username,
+    passwordHash,
+    roles: JSON.stringify(roles),
+    createdAt: Date.now(),
+  }).returning();
+  return result[0];
+}
+
+export const createUserPreferences = (userId: string) => db.insert(userPreferences)
+  .values({
+    userId
+  })

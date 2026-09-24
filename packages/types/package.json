@@ -1,0 +1,29 @@
+{
+  "name": "@voxmusica/types",
+  "packageManager": "yarn@4.14.1",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "type": "module",
+  "license": "GPL-3.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.1.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "jiti": "^2.7.0",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "eslint-plugin-import-x": "^4.17.1",
+    "typescript-eslint": "^8.68.0",
+    "zod": "^4.5.4"
+  }
+}
