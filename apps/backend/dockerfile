@@ -33,7 +33,10 @@ RUN apk add --no-cache chromaprint
 
 COPY --from=production-dependencies-env /app/node_modules ./node_modules
 COPY --from=production-dependencies-env /app/package.json ./package.json
+COPY --from=production-dependencies-env /app/yarn.lock ./yarn.lock
+COPY --from=production-dependencies-env /app/.yarnrc.yml ./.yarnrc.yml
 COPY --from=production-dependencies-env /app/apps/backend/package.json ./apps/backend/package.json
+COPY --from=production-dependencies-env /app/packages ./packages
 COPY --from=build /app/apps/backend/dist ./apps/backend/dist
 COPY apps/backend/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh

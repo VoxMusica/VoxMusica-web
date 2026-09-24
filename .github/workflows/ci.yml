@@ -84,6 +84,14 @@ jobs:
       - name: 🔧 Enable Corepack
         run: npm install -g corepack@latest && corepack enable
       - run: yarn frontend:build
+      - name: 📄 Generate env docs
+        run: yarn workspace @voxmusica/backend generate-env-docs
+      - name: Upload env docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: env-example
+          path: apps/backend/.env.example
+          retention-days: 30
 
  
   publish-frontend:

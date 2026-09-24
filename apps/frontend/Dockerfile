@@ -29,6 +29,8 @@ WORKDIR /app
 
 COPY --from=production-dependencies-env /app/node_modules ./node_modules
 COPY --from=production-dependencies-env /app/package.json ./package.json
+COPY --from=production-dependencies-env /app/yarn.lock ./yarn.lock
+COPY --from=production-dependencies-env /app/.yarnrc.yml ./.yarnrc.yml
 COPY --from=production-dependencies-env /app/apps/frontend/package.json ./apps/frontend/package.json
 COPY --from=build-env /app/apps/frontend/build ./apps/frontend/build
 

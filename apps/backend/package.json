@@ -29,7 +29,8 @@
     "lint:fix": "eslint --fix .",
     "db:generate": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit migrate",
-    "db:studio": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit studio"
+    "db:studio": "cross-env NODE_OPTIONS=--conditions=development drizzle-kit studio",
+    "generate-env-docs": "tsx scripts/generate-env-docs.ts"
   },
   "dependencies": {
     "@fastify/caching": "^9.0.4",
