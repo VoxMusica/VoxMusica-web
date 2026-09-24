@@ -28,7 +28,6 @@ RUN npm install -g corepack@latest && corepack enable
 WORKDIR /app
 
 COPY --from=production-dependencies-env /app/node_modules ./node_modules
-COPY --from=production-dependencies-env /app/apps/frontend/node_modules ./apps/frontend/node_modules
 COPY --from=production-dependencies-env /app/package.json ./package.json
 COPY --from=production-dependencies-env /app/apps/frontend/package.json ./apps/frontend/package.json
 COPY --from=build-env /app/apps/frontend/build ./apps/frontend/build
