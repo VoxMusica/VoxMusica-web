@@ -2858,7 +2858,7 @@ __metadata:
     lodash-es: "npm:^4.18.1"
     luxon: "npm:^3.7.2"
     ms: "npm:^2.1.3"
-    music-metadata: "npm:^11.15.0"
+    music-metadata: "npm:^11.16.0"
     musicbrainz-api: "npm:^1.2.1"
     node-taglib-sharp: "npm:^6.0.3"
     nodemon: "npm:^3.1.14"
@@ -7631,9 +7631,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"music-metadata@npm:^11.15.0":
-  version: 11.15.0
-  resolution: "music-metadata@npm:11.15.0"
+"music-metadata@npm:^11.16.0":
+  version: 11.16.0
+  resolution: "music-metadata@npm:11.16.0"
   dependencies:
     "@borewit/text-codec": "npm:^0.2.2"
     "@tokenizer/token": "npm:^0.3.0"
@@ -7645,7 +7645,7 @@ __metadata:
     token-types: "npm:^6.1.2"
     uint8array-extras: "npm:^1.5.0"
     win-guid: "npm:^0.2.1"
-  checksum: 10c0/8e5897e354051028547a6ac83be8d8bdc7d39fce96860e1c0fd9fc9dad87f4382fe2051cd9ca4d5c49760038a88c446302307d37ec2270cfaf3c4b079770a4e7
+  checksum: 10c0/e93a6436232709f22e2e730251da39cdcde517c5f5d62807c0c7c95711d0aaa9052e2cbb8bc8407c368026a8f816a7e7c9b4f8ed62033dc9dd5bc95f76220768
   languageName: node
   linkType: hard
 
