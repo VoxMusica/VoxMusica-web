@@ -24,6 +24,6 @@
   "dependencies": {
     "eslint-plugin-import-x": "^4.17.1",
     "typescript-eslint": "^8.68.0",
-    "zod": "^4.5.4"
+    "zod": "^4.6.6"
   }
 }
