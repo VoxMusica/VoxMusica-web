@@ -65,7 +65,7 @@
     "winston-transport": "^4.9.0",
     "xmlbuilder2": "^4.0.3",
     "yaml": "^2.9.0",
-    "zod": "^4.4.3"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
