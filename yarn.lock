@@ -9629,11 +9629,11 @@ __metadata:
   linkType: hard
 
 "systeminformation@npm:^5.22.11":
-  version: 5.33.6
-  resolution: "systeminformation@npm:5.33.6"
+  version: 5.33.19
+  resolution: "systeminformation@npm:5.33.19"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10c0/fa41a5d48da3dc34364038b1b26402e017132a7f5b663fdc6032d1bcb5e471039db48c74e2b7a14a79003b96dec961b3448c2f006dad13b4714fdce4cc852e8d
+  checksum: 10c0/cb95464c1ab9b5deabd0141d0ae22db29ced520f321c2b5cbcdea84eff5d0cf65fbb521a9945f8dc98e560bc9fc57cbe06e68dd2d34c53a4c3a59eb61d0535b3
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
